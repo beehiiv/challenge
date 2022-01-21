@@ -6,10 +6,12 @@ import Modal, { ModalBody, ModalFooter } from '../Modal'
 import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
-  const { isOpen, onClose, onSuccess } = props
+  const { isOpen, onClose, onSuccess, onError } = props
   const [isSaving, setIsSaving] = useState(false)
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+  const [errorText, setErrorText] = useState('')
+  const [errorClass, setErrorClass] = useState('')
 
   const handleChange = (e) => {
     const { target: { name, value }} = e
@@ -33,7 +35,9 @@ const AddSubscriberModal = (props) => {
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      setErrorText(error + "  Your email address is not correct.")
+      setErrorClass("error")
+      onError()
     })
     .finally(() => {
       setIsSaving(false)
@@ -57,6 +61,9 @@ const AddSubscriberModal = (props) => {
                 onChange={handleChange}
                 value={email}
               />
+              <div className="error">
+                {errorText}
+              </div>
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -98,7 +105,8 @@ const AddSubscriberModal = (props) => {
 AddSubscriberModal.propTypes = {
   isOpen: PropTypes.bool, 
   onClose: PropTypes.func,
-  onSuccess: PropTypes.func
+  onSuccess: PropTypes.func,
+  onError: PropTypes.func
 }
 
 export default AddSubscriberModal

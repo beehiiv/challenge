@@ -9,8 +9,10 @@ import Button, { SecondaryButton } from '../Button';
 import { updateSubscriber } from "../../services/subscriber";
 
 const SubscriberStatusModal = (props) => {
-  const { isOpen, onSuccess, onClose, subscriberId, status } = props;
+  const { isOpen, onSuccess, onClose, onError, subscriberId, status } = props;
   const [isDeleting, setIsDeleting] = useState(false)
+  const [errorText, setErrorText] = useState('')
+  const [errorClass, setErrorClass] = useState('')
 
   const onUpdate = () => {
     const payload = {
@@ -24,7 +26,9 @@ const SubscriberStatusModal = (props) => {
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      setErrorText(error)
+      setErrorClass("error")
+      onError()
     })
     .finally(() => {
       setIsDeleting(false)
@@ -42,6 +46,9 @@ const SubscriberStatusModal = (props) => {
   return (
     <Modal modalTitle={modalTitleText} showModal={isOpen} onCloseModal={onClose}>
       <>
+        <div className="error">
+          {errorText}
+        </div>
         <ModalBody>
           {messageBodyText}
         </ModalBody>
@@ -69,6 +76,7 @@ SubscriberStatusModal.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   onSuccess: PropTypes.func,
+  onError: PropTypes.func,
   subscriberId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   status: PropTypes.string
 }

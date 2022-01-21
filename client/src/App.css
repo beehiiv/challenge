@@ -7,6 +7,12 @@
   pointer-events: none;
 }
 
+.error {
+  color: red;
+  font-weight: 700;
+  font-size: 12px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

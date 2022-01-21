@@ -29,6 +29,8 @@ function App() {
   const [subscribers, setSubscribers] = useState([])
   const [pagination, setPagination] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [errorText, setErrorText] = useState('')
+  const [errorClass, setErrorClass] = useState('')
 
   const refreshSubscribers = useCallback(() => {
     const params = {
@@ -47,7 +49,8 @@ function App() {
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      setErrorText(error)
+      setErrorClass("error")
     })
     .finally(() => {
       setIsLoading(false)
@@ -72,6 +75,11 @@ function App() {
 
   const onSuccessAddSubscriber = () => {
     setShowAddModal(false)
+    refreshSubscribers()
+  }
+
+  const onErrorAddSubscriber = () => {
+    setShowAddModal(true)
   }
 
   const onUpdateStatusSelectected = (subscriberId, status) => {
@@ -87,6 +95,11 @@ function App() {
   const onSuccessUpdateStatusSubscriber = () => {
     setFocusedSubscriberId('')
     setFocusedSubscriberStatus('')
+    refreshSubscribers()
+  }
+
+  const onErrorUpdateStatusSubscriber = () => {
+
   }
 
   return (
@@ -96,11 +109,13 @@ function App() {
           isOpen={showAddModal}
           onClose={onCloseAddSubscriberModal}
           onSuccess={onSuccessAddSubscriber}
+          onError={onErrorAddSubscriber}
         />
         <SubscriberStatusModal
           isOpen={focusedSubscriberId !== '' && focusedSubscriberStatus !== ''}
           onClose={onCloseUpdateStatusSubscriberModal}
           onSuccess={onSuccessUpdateStatusSubscriber}
+          onError={onErrorUpdateStatusSubscriber}
           subscriberId={focusedSubscriberId}
           status={focusedSubscriberStatus}
         />
