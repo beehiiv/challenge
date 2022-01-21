@@ -36,6 +36,7 @@ class SubscribersController < ApplicationController
   end
 
   private
+
   def subscriber_params
     params.permit(:id, :name, :email, :status)
   end
