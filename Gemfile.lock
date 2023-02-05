@@ -82,9 +82,13 @@ GEM
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     diff-lcs (1.5.0)
+    email_validator (2.2.4)
+      activemodel
     erubi (1.12.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
+    faker (3.1.1)
+      i18n (>= 1.8.11, < 2)
     ffi (1.15.4)
     foreman (0.87.2)
     globalid (1.1.0)
@@ -248,7 +252,9 @@ DEPENDENCIES
   database_cleaner-active_record
   database_cleaner-redis
   debug
+  email_validator
   factory_bot
+  faker
   foreman
   listen (~> 3.3)
   mocha (~> 1.2, >= 1.2.1)

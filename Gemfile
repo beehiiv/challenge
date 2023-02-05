@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
 
+gem "email_validator"
 gem "rails", "~> 6.1"
 gem "pg", "~> 1.1"
 gem "puma", "~> 5.0"
@@ -15,6 +16,8 @@ end
 
 group :development, :test, :rake do
   gem "bundler"
+  gem "factory_bot"
+  gem "faker"
   gem "foreman"
   gem "rb-readline"
   gem "standard", "~> 1.2"
@@ -28,7 +31,6 @@ end
 group :test do
   gem "database_cleaner-active_record"
   gem "database_cleaner-redis"
-  gem "factory_bot"
   gem "rack-test"
   gem "rspec-rails", "~> 4.0.1"
   gem "webmock", "~> 3.5.0"

@@ -26,8 +26,15 @@ require "rspec/rails"
 
 RSpec::Matchers.define_negated_matcher :not_change, :change
 RSpec.configure do |config|
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
+
   # Include helpers for time travelling
   config.include ActiveSupport::Testing::TimeHelpers
+
+  # Inckude helper to build factories
+  config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
