@@ -18,11 +18,11 @@ ActiveRecord::Schema.define(version: 2023_02_05_165815) do
   create_table "subscribers", force: :cascade do |t|
     t.string "email", null: false
     t.string "name", null: false
-    t.boolean "subscribed", default: false
+    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_subscribers_on_email", unique: true
-    t.index ["subscribed"], name: "index_subscribers_on_subscribed"
+    t.index ["status"], name: "index_subscribers_on_status"
   end
 
 end
