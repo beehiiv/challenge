@@ -9,7 +9,7 @@ class SubscribersController < ApplicationController
     subscriber = Subscriber.create(create_params)
 
     if subscriber.persisted?
-      render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+      redirect_to subscribers_path
       return
     end
 
@@ -25,14 +25,6 @@ class SubscribersController < ApplicationController
   ##
   # GET /api/subscribers
   def index
-    subscribers =
-      Subscriber
-        .limit(limit)
-        .offset(offset)
-        .order(name: :asc)
-
-    total_records = subscribers.count
-
     render json: {subscribers: subscribers, pagination: pagination(total_records)}, formats: :json
   end
 
@@ -64,6 +56,18 @@ class SubscribersController < ApplicationController
 
   def create_params
     params.require(:subscriber).permit(:email, :name)
+  end
+
+  def subscribers
+    @subscribers ||=
+      Subscriber
+        .limit(limit)
+        .offset(offset)
+        .order(name: :asc)
+  end
+
+  def total_records
+    subscribers.count
   end
 
   def update_params
