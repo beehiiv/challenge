@@ -25,6 +25,7 @@ require "rspec/rails"
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 RSpec::Matchers.define_negated_matcher :not_change, :change
+
 RSpec.configure do |config|
   # Include helpers for time travelling
   config.include ActiveSupport::Testing::TimeHelpers
