@@ -34,7 +34,8 @@ group :test do
   gem "factory_bot"
   gem "mocha", "~> 1.2", ">= 1.2.1"
   gem "rack-test"
-  gem "rspec-rails", "~> 4.0.1"
+  gem "rspec-rails", "~> 6.0.0"
+  gem "shoulda-matchers", "~> 5.0"
   gem "webmock", "~> 3.5.0"
 end
 
