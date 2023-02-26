@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is used by Rack-based servers to start the application.
 
 require "rack/cors"
@@ -9,11 +11,11 @@ use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == "username" && password == "password"
 end
 
-app = Rack::Builder.new {
+app = Rack::Builder.new do
   use Rack::Static,
-    urls: ["/static", "/robots.txt"],
-    root: "client/build",
-    index: "index.html"
+      urls: ["/static", "/robots.txt"],
+      root: "client/build",
+      index: "index.html"
 
   run lambda { |_env|
     [
@@ -24,7 +26,7 @@ app = Rack::Builder.new {
       File.open("client/build/index.html", File::RDONLY)
     ]
   }
-}
+end
 
 run Rack::URLMap.new(
   "/" => app,
