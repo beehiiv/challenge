@@ -15,6 +15,7 @@ end
 
 group :development, :test, :rake do
   gem "bundler"
+  gem "factory_bot_rails"
   gem "foreman"
   gem "rb-readline"
   gem "rubocop", require: false
