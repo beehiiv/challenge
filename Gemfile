@@ -3,11 +3,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
 
-gem "rails", "~> 6.1"
+gem "bootsnap", ">= 1.4.4", require: false
 gem "pg", "~> 1.1"
 gem "puma", "~> 5.0"
 gem "rack-cors"
-gem "bootsnap", ">= 1.4.4", require: false
+gem "rails", "~> 6.1"
 
 group :development, :test do
   gem "debug"
@@ -17,6 +17,9 @@ group :development, :test, :rake do
   gem "bundler"
   gem "foreman"
   gem "rb-readline"
+  gem "rubocop", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
   gem "standard", "~> 1.2"
 end
 
@@ -29,10 +32,10 @@ group :test do
   gem "database_cleaner-active_record"
   gem "database_cleaner-redis"
   gem "factory_bot"
+  gem "mocha", "~> 1.2", ">= 1.2.1"
   gem "rack-test"
   gem "rspec-rails", "~> 4.0.1"
   gem "webmock", "~> 3.5.0"
-  gem "mocha", "~> 1.2", ">= 1.2.1"
 end
 
-gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
