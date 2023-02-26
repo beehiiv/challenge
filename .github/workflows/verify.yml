@@ -1,0 +1,14 @@
+name: Verify
+on: [push]
+
+jobs:
+  verify:
+    uses: setup-rails/setup-rails/.github/workflows/verify.yml@v1
+    # uncomment to enable options:
+    #
+    with:
+      rspec: true
+      node-version-file: '.nvmrc'
+    #   brakeman: true
+    #   bundler-audit: true
+      # rubocop: true

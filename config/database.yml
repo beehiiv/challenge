@@ -7,12 +7,14 @@ default: &default
 development:
   <<: *default
   database: challenge_development
-  password: password
+  username: <%= ENV["DATABASE_USERNAME_DEV"] %>
+  password: <%= ENV["DATABASE_PASSWORD_DEV"] %>
 
 test:
   <<: *default
   database: challenge_test
-  password: password
+  username: <%= ENV["DATABASE_USERNAME_TEST"] %>
+  password: <%= ENV["DATABASE_PASSWORD_TEST"] %>
 
 production:
   <<: *default
