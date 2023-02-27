@@ -13,7 +13,13 @@ class SubscribersController < ApplicationController
   end
 
   def create
-    render json: { message: "Subscriber created successfully" }, formats: :json, status: :created
+    subscriber = Subscriber.create(subscriber_params)
+
+    if subscriber.valid?
+      render json: { message: "Subscriber created successfully" }, formats: :json, status: :created
+    else
+      render json: { message: subscriber.errors.messages }, formats: :json, status: :not_acceptable
+    end
   end
 
   def update
@@ -24,7 +30,7 @@ class SubscribersController < ApplicationController
     if subscriber.valid?
       render json: { message: "Subscriber updated successfully" }, formats: :json, status: :ok
     else
-      render json: { message: "Error" }, formats: :json, status: :not_acceptable
+      render json: { message: subscriber.errors.messages }, formats: :json, status: :not_acceptable
     end
   end
 

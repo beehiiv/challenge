@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+import Error from '../Error'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
 import PropTypes from 'prop-types';
 
@@ -10,7 +12,10 @@ import { updateSubscriber } from "../../services/subscriber";
 
 const SubscriberStatusModal = (props) => {
   const { isOpen, onSuccess, onClose, subscriberId, status } = props;
+  const defaultErrors = {name: [], email: [], status: []}
+
   const [isDeleting, setIsDeleting] = useState(false)
+  const [errors, setErrors] = useState(defaultErrors)
 
   const onUpdate = () => {
     const payload = {
@@ -23,20 +28,23 @@ const SubscriberStatusModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      if (payload?.response?.data?.message) {
+        setErrors({ ...defaultErrors, ...payload.response.data.message })
+      } else {
+        console.log('Something went wrong')
+      }
     })
     .finally(() => {
       setIsDeleting(false)
     })
   }
 
-  const modalTitleText = status === 'active' ? 
+  const modalTitleText = status === 'active' ?
     "Unsubscribe" : "Resubscribe"
-  const messageBodyText = status === 'active' ? 
+  const messageBodyText = status === 'active' ?
     "Are you sure you'd like to unsubscribe this subscriber?" :
     "Are you sure you'd like to resubscribe this subscriber?"
-  const buttonText = status === 'active' ? 
+  const buttonText = status === 'active' ?
     "Unsubscribe" : "Resubscribe"
 
   return (
@@ -59,6 +67,7 @@ const SubscriberStatusModal = (props) => {
           >
             {buttonText}
           </Button>
+          <Error errors={errors['status']} />
         </ModalFooter>
       </>
     </Modal>

@@ -38,6 +38,46 @@ RSpec.describe "Subscribers", type: :request do
     end
   end
 
+  describe "POST subscribers#create" do
+    let(:headers) { { "Content-Type": "application/json" } }
+    let(:subscriber) { Subscriber.first }
+
+    context "with valid attributes" do
+      let(:user_params) { { name: Faker::Name.name, email: Faker::Internet.email } }
+
+      it "creates the subscriber" do
+        post("/subscribers", params: user_params.to_json, headers:)
+
+        expect(response).to have_http_status :created
+        expect(response.parsed_body).to eq("message" => "Subscriber created successfully")
+
+        expect(subscriber.name).to eq user_params[:name]
+        expect(subscriber.email).to eq user_params[:email]
+        expect(subscriber).to be_inactive
+      end
+    end
+
+    context "with invalid attributes" do
+      let(:user_params) { { name: "", email: "" } }
+      let(:expected) do
+        {
+          "message" => {
+            "email" => ["can't be blank", "is invalid"],
+            "name" => ["can't be blank"]
+          }
+        }
+      end
+
+      it "does not create the subscriber" do
+        post("/subscribers", params: user_params.to_json, headers:)
+
+        expect(response).to have_http_status :not_acceptable
+        expect(response.parsed_body).to eq expected
+        expect(subscriber).to be_nil
+      end
+    end
+  end
+
   describe "PATCH subscribers#update" do
     let(:headers) { { "Content-Type": "application/json" } }
     let!(:subscriber) { create(:subscriber, status: :inactive) }
@@ -62,13 +102,22 @@ RSpec.describe "Subscribers", type: :request do
     context "with invalid attributes" do
       let(:user_params) { { name: "", email: "", status: :active } }
 
+      let(:expected) do
+        {
+          "message" => {
+            "email" => ["can't be blank", "is invalid"],
+            "name" => ["can't be blank"]
+          }
+        }
+      end
+
       it "does not update the subscriber" do
         patch("/subscribers/#{subscriber.id}", params: user_params.to_json, headers:)
 
         subscriber.reload
 
         expect(response).to have_http_status :not_acceptable
-        expect(response.parsed_body).to eq("message" => "Error")
+        expect(response.parsed_body).to eq expected
 
         expect(subscriber.name).not_to eq user_params[:name]
         expect(subscriber.email).not_to eq user_params[:email]

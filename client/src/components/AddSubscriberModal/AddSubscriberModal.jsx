@@ -1,15 +1,20 @@
 import { useState } from "react";
 import PropTypes from 'prop-types'
+
 import Button, { SecondaryButton } from '../Button'
+import Error from '../Error'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
 
 import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
   const { isOpen, onClose, onSuccess } = props
+  const defaultErrors = {name: [], email: [], status: []}
+
   const [isSaving, setIsSaving] = useState(false)
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+  const [errors, setErrors] = useState(defaultErrors)
 
   const handleChange = (e) => {
     const { target: { name, value }} = e
@@ -32,8 +37,11 @@ const AddSubscriberModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      if (payload?.response?.data?.message) {
+        setErrors({ ...defaultErrors, ...payload.response.data.message })
+      } else {
+        console.log('Something went wrong')
+      }
     })
     .finally(() => {
       setIsSaving(false)
@@ -57,6 +65,7 @@ const AddSubscriberModal = (props) => {
                 onChange={handleChange}
                 value={email}
               />
+              <Error errors={errors['email']} />
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -70,6 +79,7 @@ const AddSubscriberModal = (props) => {
                 onChange={handleChange}
                 value={name}
               />
+              <Error errors={errors['name']} />
             </div>
           </form>
         </ModalBody>
@@ -96,7 +106,7 @@ const AddSubscriberModal = (props) => {
 }
 
 AddSubscriberModal.propTypes = {
-  isOpen: PropTypes.bool, 
+  isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   onSuccess: PropTypes.func
 }

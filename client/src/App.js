@@ -71,6 +71,7 @@ function App() {
   }
 
   const onSuccessAddSubscriber = () => {
+    refreshSubscribers()
     setShowAddModal(false)
   }
 
@@ -85,9 +86,9 @@ function App() {
   }
 
   const onSuccessUpdateStatusSubscriber = () => {
+    refreshSubscribers()
     setFocusedSubscriberId('')
     setFocusedSubscriberStatus('')
-    refreshSubscribers()
   }
 
   return (
