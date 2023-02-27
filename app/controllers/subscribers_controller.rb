@@ -4,7 +4,7 @@ class SubscribersController < ApplicationController
   include PaginationMethods
 
   def index
-    subscribers = Subscriber.all
+    subscribers = Subscriber.order(:created_at)
 
     total_records = subscribers.count
     limited_subscribers = subscribers.drop(offset).first(limit)
@@ -17,6 +17,20 @@ class SubscribersController < ApplicationController
   end
 
   def update
-    render json: { message: "Subscriber updated successfully" }, formats: :json, status: :ok
+    subscriber = Subscriber.find(params[:id])
+
+    subscriber.update(subscriber_params)
+
+    if subscriber.valid?
+      render json: { message: "Subscriber updated successfully" }, formats: :json, status: :ok
+    else
+      render json: { message: "Error" }, formats: :json, status: :not_acceptable
+    end
+  end
+
+  private
+
+  def subscriber_params
+    params.permit(:name, :email, :status)
   end
 end
