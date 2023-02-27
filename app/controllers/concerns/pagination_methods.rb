@@ -23,6 +23,6 @@ module PaginationMethods
   end
 
   def offset
-    page == 1 ? 0 : ((page - 1) * limit)
+    (page == 1) ? 0 : ((page - 1) * limit)
   end
 end

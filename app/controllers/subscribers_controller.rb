@@ -9,16 +9,16 @@ class SubscribersController < ApplicationController
     total_records = subscribers.count
     limited_subscribers = subscribers.drop(offset).first(limit)
 
-    render json: { subscribers: limited_subscribers, pagination: pagination(total_records) }, formats: :json
+    render json: {subscribers: limited_subscribers, pagination: pagination(total_records)}, formats: :json
   end
 
   def create
     subscriber = Subscriber.create(subscriber_params)
 
     if subscriber.valid?
-      render json: { message: "Subscriber created successfully" }, formats: :json, status: :created
+      render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
     else
-      render json: { message: subscriber.errors.messages }, formats: :json, status: :not_acceptable
+      render json: {message: subscriber.errors.messages}, formats: :json, status: :not_acceptable
     end
   end
 
@@ -28,9 +28,9 @@ class SubscribersController < ApplicationController
     subscriber.update(subscriber_params)
 
     if subscriber.valid?
-      render json: { message: "Subscriber updated successfully" }, formats: :json, status: :ok
+      render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
     else
-      render json: { message: subscriber.errors.messages }, formats: :json, status: :not_acceptable
+      render json: {message: subscriber.errors.messages}, formats: :json, status: :not_acceptable
     end
   end
 

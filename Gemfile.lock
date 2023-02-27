@@ -251,10 +251,6 @@ GEM
     rubocop-performance (1.15.2)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.18.0)
-      activesupport (>= 4.2.0)
-      rack (>= 1.1)
-      rubocop (>= 1.33.0, < 2.0)
     ruby-progressbar (1.11.0)
     shellany (0.0.1)
     shoulda-matchers (5.3.0)
@@ -312,9 +308,6 @@ DEPENDENCIES
   rails (~> 6.1)
   rb-readline
   rspec-rails (~> 6.0.0)
-  rubocop
-  rubocop-performance
-  rubocop-rails
   shoulda-matchers (~> 5.0)
   spring
   standard (~> 1.2)

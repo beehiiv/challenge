@@ -25,9 +25,6 @@ group :development, :test, :rake do
   gem "foreman"
   gem "rb-readline"
   gem "rspec-rails", "~> 6.0.0"
-  gem "rubocop", require: false
-  gem "rubocop-performance", require: false
-  gem "rubocop-rails", require: false
   gem "shoulda-matchers", "~> 5.0"
   gem "standard", "~> 1.2"
 end

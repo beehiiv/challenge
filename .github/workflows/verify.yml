@@ -9,4 +9,4 @@ jobs:
       node-version-file: '.nvmrc'
       brakeman: true
       bundler-audit: true
-      rubocop: true
+      rubocop: false

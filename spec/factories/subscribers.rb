@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :subscriber do
-    name {  Faker::Name.name }
+    name { Faker::Name.name }
     email { Faker::Internet.email }
     status { :inactive }
   end

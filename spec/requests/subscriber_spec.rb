@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Subscribers", type: :request do
   describe "GET subscribers#index" do
-    let(:headers) { { "Content-Type": "application/json" } }
+    let(:headers) { {"Content-Type": "application/json"} }
     let(:sub1) { create(:subscriber) }
     let(:sub2) { create(:subscriber) }
     let(:sub3) { create(:subscriber) }
@@ -39,11 +39,11 @@ RSpec.describe "Subscribers", type: :request do
   end
 
   describe "POST subscribers#create" do
-    let(:headers) { { "Content-Type": "application/json" } }
+    let(:headers) { {"Content-Type": "application/json"} }
     let(:subscriber) { Subscriber.first }
 
     context "with valid attributes" do
-      let(:user_params) { { name: Faker::Name.name, email: Faker::Internet.email } }
+      let(:user_params) { {name: Faker::Name.name, email: Faker::Internet.email} }
 
       it "creates the subscriber" do
         post("/subscribers", params: user_params.to_json, headers:)
@@ -58,7 +58,7 @@ RSpec.describe "Subscribers", type: :request do
     end
 
     context "with invalid attributes" do
-      let(:user_params) { { name: "", email: "" } }
+      let(:user_params) { {name: "", email: ""} }
       let(:expected) do
         {
           "message" => {
@@ -78,11 +78,11 @@ RSpec.describe "Subscribers", type: :request do
   end
 
   describe "PATCH subscribers#update" do
-    let(:headers) { { "Content-Type": "application/json" } }
+    let(:headers) { {"Content-Type": "application/json"} }
     let!(:subscriber) { create(:subscriber, status: :inactive) }
 
     context "with valid attributes" do
-      let(:user_params) { { name: Faker::Name.name, email: Faker::Internet.email, status: :active } }
+      let(:user_params) { {name: Faker::Name.name, email: Faker::Internet.email, status: :active} }
 
       it "updates the subscriber" do
         patch("/subscribers/#{subscriber.id}", params: user_params.to_json, headers:)
@@ -99,7 +99,7 @@ RSpec.describe "Subscribers", type: :request do
     end
 
     context "with invalid attributes" do
-      let(:user_params) { { name: "", email: "", status: :active } }
+      let(:user_params) { {name: "", email: "", status: :active} }
 
       let(:expected) do
         {

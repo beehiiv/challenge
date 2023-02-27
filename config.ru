@@ -13,9 +13,9 @@ end
 
 app = Rack::Builder.new do
   use Rack::Static,
-      urls: ["/static", "/robots.txt"],
-      root: "client/build",
-      index: "index.html"
+    urls: ["/static", "/robots.txt"],
+    root: "client/build",
+    index: "index.html"
 
   run lambda { |_env|
     [

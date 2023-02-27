@@ -18,7 +18,7 @@ RSpec.describe SubscribersController, type: :controller do
 
   describe "POST /subscribers" do
     it "returns 201 if it successfully creates a subscriber" do
-      post :create, params: { email: "test@test.com", name: "John Smith" }, format: :json
+      post :create, params: {email: "test@test.com", name: "John Smith"}, format: :json
 
       expect(response).to have_http_status(:created)
       expect(response.content_type).to eq("application/json; charset=utf-8")
@@ -32,7 +32,7 @@ RSpec.describe SubscribersController, type: :controller do
     let!(:subscriber) { create(:subscriber) }
 
     it "returns 200 if it successfully updates a subscriber" do
-      patch :update, params: { id: subscriber.id, status: "inactive" }, format: :json
+      patch :update, params: {id: subscriber.id, status: "inactive"}, format: :json
 
       expect(response).to have_http_status(:ok)
       expect(response.content_type).to eq("application/json; charset=utf-8")
