@@ -62,8 +62,7 @@ RSpec.describe "Subscribers", type: :request do
       let(:expected) do
         {
           "message" => {
-            "email" => ["can't be blank", "is invalid"],
-            "name" => ["can't be blank"]
+            "email" => ["can't be blank", "is invalid"]
           }
         }
       end
@@ -105,8 +104,7 @@ RSpec.describe "Subscribers", type: :request do
       let(:expected) do
         {
           "message" => {
-            "email" => ["can't be blank", "is invalid"],
-            "name" => ["can't be blank"]
+            "email" => ["can't be blank", "is invalid"]
           }
         }
       end

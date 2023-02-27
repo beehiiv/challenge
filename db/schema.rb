@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 2023_02_26_221231) do
   enable_extension "plpgsql"
 
   create_table "subscribers", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
     t.string "email", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
