@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -15,6 +17,7 @@ group :development, :test do
 end
 
 group :development, :test, :rake do
+  gem "brakeman"
   gem "bundler"
   gem "dotenv-rails"
   gem "factory_bot_rails"
@@ -35,6 +38,7 @@ group :development do
 end
 
 group :test do
+  gem "bundler-audit"
   gem "database_cleaner-active_record"
   gem "database_cleaner-redis"
   gem "mocha", "~> 1.2", ">= 1.2.1"
