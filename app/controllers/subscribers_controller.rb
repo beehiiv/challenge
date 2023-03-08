@@ -6,44 +6,7 @@ class SubscribersController < ApplicationController
   ##
   # GET /api/subscribers
   def index
-    subscribers = [
-      {
-        id: 1,
-        name: "Rick Sanchez",
-        email: "rickc137@citadel.com",
-        status: "active"
-      },
-      {
-        id: 2,
-        name: "Morty Smith",
-        email: "morty.smith@gmail.com",
-        status: "inactive"
-      },
-      {
-        id: 3,
-        name: "Jerry Smith",
-        email: "jerry.smith@aol.com",
-        status: "active"
-      },
-      {
-        id: 4,
-        name: "Beth Smith",
-        email: "beth.smith@gmail.com",
-        status: "active"
-      },
-      {
-        id: 5,
-        name: "Summer Smith",
-        email: "summer.smith@gmail.com",
-        status: "active"
-      },
-      {
-        id: 6,
-        name: "Bird Person",
-        email: "bird.person@birdworld.com",
-        status: "active"
-      }
-    ]
+    subscribers = Subscriber.all
 
     total_records = subscribers.count
     limited_subscribers = subscribers[offset..limit]
@@ -52,10 +15,29 @@ class SubscribersController < ApplicationController
   end
 
   def create
-    render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    subscriber = Subscriber.create(subscriber_params)
+    subscriber.status = 'active'
+    success = subscriber.save
+    if success
+      render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    else
+      render json: {message: "Failed to create subscriber", error: subscriber.errors}, formats: :json, status: :internal_server_error
+    end
   end
 
   def update
-    render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    subscriber = Subscriber.find(params[:id])
+    success = subscriber&.update(subscriber_params)
+    if success
+      render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    else
+      render json: {message: "Failed to update subscriber", error: subscriber.errors}, formats: :json, status: :internal_server_error
+    end
+  end
+
+  private
+
+  def subscriber_params
+    params.require(:subscriber).permit(:id, :name, :email, :status)
   end
 end
