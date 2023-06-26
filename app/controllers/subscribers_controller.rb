@@ -26,7 +26,7 @@ class SubscribersController < ApplicationController
   end
 
   def update
-    subscriber = Subscriber.find_by(id: 50)
+    subscriber = Subscriber.find_by(id: params[:id])
 
     if subscriber
       if subscriber.update(subscriber_params)
