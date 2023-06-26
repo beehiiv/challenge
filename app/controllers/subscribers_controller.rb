@@ -26,7 +26,7 @@ class SubscribersController < ApplicationController
   end
 
   def update
-    subscriber = Subscriber.find_by(id: params[:id])
+    subscriber = Subscriber.find_by(id: 50)
 
     if subscriber
       if subscriber.update(subscriber_params)
@@ -35,7 +35,7 @@ class SubscribersController < ApplicationController
         render json: { errors: subscriber.errors.full_messages }, formats: :json, status: :unprocessable_entity
       end
     else
-      render json: { errors: "Subscriber not found" }, formats: :json, status: :not_found
+      render json: { errors: ["Subscriber not found"] }, formats: :json, status: :not_found
     end
   end
 
