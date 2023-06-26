@@ -9,7 +9,7 @@ class SubscribersController < ApplicationController
     subscribers = Subscriber.all
 
     total_records = subscribers.count
-    limited_subscribers = subscribers[offset..limit]
+    limited_subscribers = subscribers.offset(offset).limit(limit)
 
     serialized_subscribers = ActiveModelSerializers::SerializableResource.new(limited_subscribers, each_serializer: SubscriberSerializer)
     render json: { subscribers: serialized_subscribers, pagination: pagination(total_records) }, formats: :json
@@ -24,9 +24,14 @@ class SubscribersController < ApplicationController
       render json: { errors: subscriber.errors.full_messages }, formats: :json, status: :unprocessable_entity
     end
   end
-
   def update
-    render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    subscriber = Subscriber.find(params[:id])
+
+    if subscriber.update(subscriber_params)
+      render json: { message: "Subscriber updated successfully" }, formats: :json, status: :ok
+    else
+      render json: { errors: subscriber.errors.full_messages }, formats: :json, status: :unprocessable_entity
+    end
   end
 
   private
