@@ -30,7 +30,11 @@ RSpec.describe SubscribersController, type: :controller do
 
   describe "PATCH /subscribers/:id" do
     it "returns 200 if it successfully updates a subscriber" do
-      patch :update, params: {id: 1, status: "inactive"}, format: :json
+      # create a subscriber
+      subscriber = Subscriber.create(email: "test@test.com", name: "John Doe")
+
+      #update the subscriber's status
+      patch :update, params: {id: subscriber.id, subscriber: {status: "inactive"}}, format: :json
 
       expect(response).to have_http_status(:ok)
       expect(response.content_type).to eq("application/json; charset=utf-8")
