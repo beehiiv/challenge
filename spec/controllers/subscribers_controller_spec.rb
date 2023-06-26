@@ -18,7 +18,7 @@ RSpec.describe SubscribersController, type: :controller do
 
   describe "POST /subscribers" do
     it "returns 201 if it successfully creates a subscriber" do
-      post :create, params: { subscriber: { email: "test@test.com", name: "John Smith"} }, format: :json
+      post :create, params: {subscriber: {email: "test@test.com", name: "John Smith"}}, format: :json
 
       expect(response).to have_http_status(:created)
       expect(response.content_type).to eq("application/json; charset=utf-8")
