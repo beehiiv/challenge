@@ -88,6 +88,7 @@ function App() {
   const onSuccessUpdateStatusSubscriber = () => {
     setFocusedSubscriberId('')
     setFocusedSubscriberStatus('')
+    refreshSubscribers()
   }
 
   return (
