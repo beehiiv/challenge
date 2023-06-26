@@ -21,7 +21,7 @@ function App() {
   );
   const [perPage] = useQueryParam(
     'perPage',
-    withDefault(NumberParam, 25)
+    withDefault(NumberParam, 10)
   );
   const [showAddModal, setShowAddModal] = useState(false)
   const [focusedSubscriberId, setFocusedSubscriberId] = useState('')
