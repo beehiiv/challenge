@@ -6,7 +6,7 @@ class SubscribersController < ApplicationController
   ##
   # GET /api/subscribers
   def index
-    subscribers = Subscriber.all
+    subscribers = Subscriber.all.order(id: :asc)
 
     total_records = subscribers.count
     limited_subscribers = subscribers.offset(offset).limit(limit)
@@ -24,6 +24,7 @@ class SubscribersController < ApplicationController
       render json: { errors: subscriber.errors.full_messages }, formats: :json, status: :unprocessable_entity
     end
   end
+
   def update
     subscriber = Subscriber.find(params[:id])
 
@@ -37,6 +38,6 @@ class SubscribersController < ApplicationController
   private
 
   def subscriber_params
-    params.require(:subscriber).permit(:name, :email)
+    params.require(:subscriber).permit(:name, :email, :status)
   end
 end
