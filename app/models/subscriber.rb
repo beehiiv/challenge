@@ -12,9 +12,7 @@ class Subscriber < ApplicationRecord
   end
 
   def email_does_not_contain_whitespace
-    return unless email.present?
-
-    if email.match?(/\s/)
+    if email && email.match(/\s/)
       errors.add(:email, "cannot contain whitespace")
     end
   end
