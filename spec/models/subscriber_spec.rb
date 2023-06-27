@@ -14,17 +14,16 @@ RSpec.describe Subscriber, type: :model do
       expect(subscriber1).to be_valid
     end
 
+    it "succeeds when name is not present" do
+      subscriber1.name = nil
+      expect(subscriber1).to be_valid
+    end
+
     it "fails when email is not unique" do
       subscriber1.save
       subscriber2.email = subscriber1.email
       expect(subscriber2).not_to be_valid
       expect(subscriber2.errors[:email]).to include("has already been taken")
-    end
-
-    it "fails when name is not present" do
-      subscriber2.name = nil
-      expect(subscriber2).not_to be_valid
-      expect(subscriber2.errors[:name]).to include("can't be blank")
     end
 
     it "fails when email is not a valid email address" do
@@ -40,10 +39,10 @@ RSpec.describe Subscriber, type: :model do
     end
   end
 
-  describe "#downcase_email" do
+  describe "callbacks" do
     let(:subscriber) { FactoryBot.build(:subscriber, email: "JohnDoe@example.com") }
 
-    it "downcases the email" do
+    it "downcases the email before save" do
       subscriber.save
       expect(subscriber.email).to eq("johndoe@example.com")
     end
