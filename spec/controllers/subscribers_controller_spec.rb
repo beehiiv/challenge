@@ -33,7 +33,7 @@ RSpec.describe SubscribersController, type: :controller do
       # create a subscriber
       subscriber = Subscriber.create(email: "test@test.com", name: "John Doe")
 
-      #update the subscriber's status
+      # update the subscriber's status
       patch :update, params: {id: subscriber.id, subscriber: {status: "inactive"}}, format: :json
 
       expect(response).to have_http_status(:ok)
