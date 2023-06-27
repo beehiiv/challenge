@@ -4,8 +4,14 @@ require "rails_helper"
 
 RSpec.describe SubscribersController, type: :controller do
   describe "GET /subscribers" do
-    it "returns 200 and a list of subscribers and pagination object" do
-      get :index, params: {}, format: :json
+
+    it "returns 200 and a paginated list of subscribers" do
+      # Create some test subscribers
+      subscriber1 = FactoryBot.create(:subscriber, name: "John Doe")
+      subscriber2 = FactoryBot.create(:subscriber, name: "Jane Smith")
+      subscriber3 = FactoryBot.create(:subscriber, name: "Jane Doe")
+
+      get :index, params: {page: "1", per_page: "2"}, format: :json
 
       expect(response).to have_http_status(:ok)
       expect(response.content_type).to eq("application/json; charset=utf-8")
@@ -13,6 +19,10 @@ RSpec.describe SubscribersController, type: :controller do
       json = JSON.parse(response.body, symbolize_names: true)
       expect(json[:subscribers]).not_to be_nil
       expect(json[:pagination]).not_to be_nil
+
+      # Ensure the response includes the created subscribers
+      subscriber_names = json[:subscribers].map { |subscriber| subscriber[:name] }
+      expect(subscriber_names).to include(subscriber1.name, subscriber2.name)
     end
   end
 
