@@ -6,7 +6,7 @@ class SubscribersController < ApplicationController
   ##
   # GET /api/subscribers
   def index
-    subscribers = Subscriber.all.order(id: :asc)
+    subscribers = Subscriber.all.order(created_at: :asc)
 
     total_records = subscribers.count
     limited_subscribers = subscribers.offset(offset).limit(limit)
