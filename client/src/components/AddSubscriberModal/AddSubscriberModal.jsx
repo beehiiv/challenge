@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from 'prop-types'
 import Button, { SecondaryButton } from '../Button'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
+import ErrorMessage from '../ErrorMessage'
 
 import { createSubscriber } from "../../services/subscriber";
 
@@ -56,13 +57,7 @@ const AddSubscriberModal = (props) => {
       <>
         <ModalBody>
           {/* Display errors in a message box */}
-          {errors.length > 0 && (
-              <div className="bg-red-100 text-red-500 p-4 mb-4">
-                {errors.map((error, index) => (
-                    <p key={index}>{error}</p>
-                ))}
-              </div>
-          )}
+          <ErrorMessage errors={errors} />
 
           <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
             <div className="mb-4">

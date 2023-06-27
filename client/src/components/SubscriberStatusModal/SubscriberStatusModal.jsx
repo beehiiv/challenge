@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Modal, { ModalBody, ModalFooter } from '../Modal'
+import ErrorMessage from '../ErrorMessage'
 import PropTypes from 'prop-types';
 
 // Components
@@ -53,13 +54,7 @@ const SubscriberStatusModal = (props) => {
       <>
         <ModalBody>
           {/* Display errors in a message box */}
-          {errors.length > 0 && (
-              <div className="bg-red-100 text-red-500 p-4 mb-4">
-                {errors.map((error, index) => (
-                    <p key={index}>{error}</p>
-                ))}
-              </div>
-          )}
+          <ErrorMessage errors={errors} />
           {messageBodyText}
         </ModalBody>
         <ModalFooter>
