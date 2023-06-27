@@ -26,6 +26,17 @@ RSpec.describe SubscribersController, type: :controller do
       json = JSON.parse(response.body, symbolize_names: true)
       expect(json[:message]).to eq "Subscriber created successfully"
     end
+
+    it "returns 422 if the subscriber is not valid" do
+      post :create, params: { subscriber: { email: "", name: "John Smith" } }, format: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+
+      json = JSON.parse(response.body, symbolize_names: true)
+      expect(json[:errors]).to include("Email can't be blank")
+    end
+
   end
 
   describe "PATCH /subscribers/:id" do
@@ -41,6 +52,31 @@ RSpec.describe SubscribersController, type: :controller do
 
       json = JSON.parse(response.body, symbolize_names: true)
       expect(json[:message]).to eq "Subscriber updated successfully"
+    end
+
+    it "returns 422 if the update fails due to validation errors" do
+      subscriber = Subscriber.create(email: "test@test.com", name: "John Doe")
+
+      patch :update, params: { id: subscriber.id, subscriber: { email: "" } }, format: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+
+      json = JSON.parse(response.body, symbolize_names: true)
+      expect(json[:errors]).to include("Email can't be blank")
+
+      subscriber.reload
+      expect(subscriber.email).to eq("test@test.com")
+    end
+
+    it "returns 404 if the subscriber is not found" do
+      patch :update, params: { id: 999, subscriber: { name: "Jane Smith" } }, format: :json
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+
+      json = JSON.parse(response.body, symbolize_names: true)
+      expect(json[:errors]).to eq(["Subscriber not found"])
     end
   end
 end
