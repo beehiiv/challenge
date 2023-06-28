@@ -49,6 +49,18 @@ RSpec.describe Subscriber, :type => :model do
     assert !duplicate_subscriber.valid?
   end
 
+  it "is valid with a valid status" do
+    subscriber_one = Subscriber.new(email: "marysmith1@email.com", name: 'Mary Smith', status: 'active')
+    subscriber_two = Subscriber.new(email: "marysmith2@email.com", name: 'Mary Smith', status: 'inactive')
+    assert subscriber_one.valid?
+    assert subscriber_two.valid?
+  end
+
+  it "is invalid with an invalid status value" do
+    subscriber = Subscriber.new(email: "marysmith1@email.com", name: 'Mary Smith', status: 'cancelled')
+    assert !subscriber.valid?
+  end
+
   # email regex
   it "should return true for incorrect email address formats" do
     valid_addresses.each do |valid_address|

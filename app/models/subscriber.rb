@@ -3,5 +3,5 @@ class Subscriber < ApplicationRecord
 
   validates :email, presence: true, format: { with: Challenge::VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   validates :name, presence: true
-  validates :status, presence: true
+  validates :status, presence: true, inclusion: ['active', 'inactive']
 end
