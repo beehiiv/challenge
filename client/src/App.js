@@ -15,14 +15,9 @@ import { getSubscribers } from './services/subscriber'
 import './App.css';
 
 function App() {
-  const [page, setPage] = useQueryParam(
-    'page',
-    withDefault(NumberParam, 1)
-  );
-  const [perPage] = useQueryParam(
-    'perPage',
-    withDefault(NumberParam, 25)
-  );
+  const [page, setPage] = useQueryParam('page');
+  const [perPage] = useQueryParam('per_page');
+
   const [showAddModal, setShowAddModal] = useState(false)
   const [focusedSubscriberId, setFocusedSubscriberId] = useState('')
   const [focusedSubscriberStatus, setFocusedSubscriberStatus] = useState('')

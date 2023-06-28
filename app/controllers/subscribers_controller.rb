@@ -9,7 +9,7 @@ class SubscribersController < ApplicationController
     subscribers = Subscriber.all.by_recently_created
 
     total_records = subscribers.count
-    limited_subscribers = subscribers[offset..limit]
+    limited_subscribers = subscribers.limit(limit).offset(offset)
 
     render json: {subscribers: limited_subscribers, pagination: pagination(total_records)}, formats: :json
   end
