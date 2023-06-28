@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ErrorMessage = ({ errors }) => {
+export default function ErrorMessage({ errors }) {
     if (errors.length === 0) {
         return null;
     }
@@ -12,6 +12,4 @@ const ErrorMessage = ({ errors }) => {
             ))}
         </div>
     );
-};
-
-export default ErrorMessage;
+}

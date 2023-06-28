@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Modal, { ModalBody, ModalFooter } from '../Modal'
-import ErrorMessage from '../ErrorMessage'
+import { ErrorMessage } from '../ErrorMessage'
 import PropTypes from 'prop-types';
 
 // Components

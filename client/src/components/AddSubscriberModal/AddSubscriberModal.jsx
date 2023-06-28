@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from 'prop-types'
 import Button, { SecondaryButton } from '../Button'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
-import ErrorMessage from '../ErrorMessage'
-
+import { ErrorMessage } from '../ErrorMessage'
 import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
