@@ -37,6 +37,8 @@ const AddSubscriberModal = (props) => {
     })
     .finally(() => {
       setIsSaving(false)
+      setEmail('')
+      setName('')
     })
   }
 

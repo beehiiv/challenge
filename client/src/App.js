@@ -24,6 +24,7 @@ function App() {
   const [subscribers, setSubscribers] = useState([])
   const [pagination, setPagination] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [updatedList, setUpdatedList] = useState(false)
 
   const refreshSubscribers = useCallback(() => {
     const params = {
@@ -42,7 +43,7 @@ function App() {
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      alert(error);
     })
     .finally(() => {
       setIsLoading(false)
@@ -51,7 +52,7 @@ function App() {
 
   useEffect(() => {
     refreshSubscribers()
-  }, [refreshSubscribers]);
+  }, [refreshSubscribers, updatedList]);
 
   const onPageSelected = (page) => {
     setPage(page)
@@ -66,6 +67,7 @@ function App() {
   }
 
   const onSuccessAddSubscriber = () => {
+    setUpdatedList(!updatedList)
     setShowAddModal(false)
   }
 
