@@ -24,6 +24,14 @@ class SubscribersController < ApplicationController
   end
 
   def update
-    render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    subscriber = Subscriber.find(params[:id])
+
+    updated_status = subscriber.status == 'active' ? 'inactive' : 'active'
+
+    if subscriber.update({status: updated_status})
+      render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    else
+      puts "Update unsuccessful"
+    end
   end
 end
