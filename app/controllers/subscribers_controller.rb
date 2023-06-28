@@ -6,7 +6,7 @@ class SubscribersController < ApplicationController
   ##
   # GET /api/subscribers
   def index
-    subscribers = Subscriber.all
+    subscribers = Subscriber.all.by_recently_created
 
     total_records = subscribers.count
     limited_subscribers = subscribers[offset..limit]
@@ -15,7 +15,12 @@ class SubscribersController < ApplicationController
   end
 
   def create
-    render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    subscriber = Subscriber.new(email: params[:email], name: params[:name], status: 'active')
+    if subscriber.save
+      render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    else
+      puts "Invalid entry"
+    end
   end
 
   def update
