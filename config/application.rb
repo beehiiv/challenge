@@ -20,6 +20,10 @@ require "rails/test_unit/railtie"
 Bundler.require(*Rails.groups)
 
 module Challenge
+
+  # https://www.abstractapi.com/guides/how-to-validate-an-email-address-in-ruby
+  VALID_EMAIL_REGEX = /\A[a-zA-Z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
+
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
