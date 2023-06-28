@@ -16,7 +16,7 @@ export const createSubscriber = (payload = {}) => {
     'Content-Type': 'application/json'
   }
 
-  return axios.post('/api/subscribers', { subscriber: payload }, {
+  return axios.post('/api/subscribers', payload, {
     headers: headers
   })
 }
