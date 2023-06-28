@@ -107,6 +107,9 @@ function App() {
             Add Subscriber
           </SecondaryButton>
         </div>
+        <p className="text-xs">
+          Showing {subscribers.length} results per page <span className="italic">(max 25)</span>
+        </p>
         <div className="mt-6">
           <SubscriberTable
             subscribers={subscribers}
