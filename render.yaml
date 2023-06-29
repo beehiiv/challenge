@@ -1,0 +1,18 @@
+databases:
+  - name: challenge
+    databaseName: challenge
+    user: challenge
+
+services:
+  - type: web
+    name: challenge
+    runtime: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec foreman start"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: challenge
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
