@@ -2,6 +2,8 @@
 # exit on error
 set -o errexit
 
+bundle config set frozen false
+
 bundle install
 # clean
 rm -rf public
