@@ -6,7 +6,7 @@ require_relative "config/environment"
 Rails.application.load_server
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  username == "username" && password == "password"
+  username == Rails.application.config.http_auth[:username] && password == Rails.application.config.http_auth[:password]
 end
 
 app = Rack::Builder.new {
