@@ -7,6 +7,7 @@ Challenge is a rails/react app meant to be used with our code challenge assignme
 ## The Stack
 
 #### Server
+
 - Language
   - Ruby 3.1.2
   - Rails 6.1
@@ -32,13 +33,17 @@ Challenge is a rails/react app meant to be used with our code challenge assignme
     yarn watch:app
 
     # view at http://localhost:2001, basic auth is username/password (see `config.ru`)
+
 ## Test It
 
     # Setup test DB for testing
     ./scripts/setup_test_db
 
-    # Run tests
+    # Run tests (Rails)
     bundle exec rspec
+
+    # Run tests (Client)
+    yarn run test
 
 ## Lint It
 

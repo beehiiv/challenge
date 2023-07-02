@@ -1,52 +1,63 @@
 import { useState } from "react";
-import PropTypes from 'prop-types'
-import Button, { SecondaryButton } from '../Button'
-import Modal, { ModalBody, ModalFooter } from '../Modal'
+import PropTypes from "prop-types";
+import Button, { SecondaryButton } from "../Button";
+import Modal, { ModalBody, ModalFooter } from "../Modal";
 
 import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
-  const { isOpen, onClose, onSuccess } = props
-  const [isSaving, setIsSaving] = useState(false)
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
+  const { isOpen, onClose, onSuccess } = props;
+  const [isSaving, setIsSaving] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const handleChange = (e) => {
-    const { target: { name, value }} = e
+    const {
+      target: { name, value },
+    } = e;
 
-    if (name === 'email') {
-      setEmail(value)
-    } else if (name === 'name') {
-      setName(value)
+    if (name === "email") {
+      setEmail(value);
+    } else if (name === "name") {
+      setName(value);
     }
-  }
+  };
   const onSubmit = () => {
     const payload = {
       email,
-      name
-    }
+      name,
+    };
 
-    setIsSaving(true)
+    setIsSaving(true);
     createSubscriber(payload)
-    .then(() => {
-      onSuccess()
-    })
-    .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
-    })
-    .finally(() => {
-      setIsSaving(false)
-    })
-  }
+      .then(() => {
+        onSuccess();
+      })
+      .catch((payload) => {
+        const error =
+          payload?.response?.data?.message || "Something went wrong";
+        console.error(error);
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
+  };
 
   return (
-    <Modal modalTitle="Add Subscriber" showModal={isOpen} onCloseModal={onClose}>
+    <Modal
+      modalTitle="Add Subscriber"
+      showModal={isOpen}
+      onCloseModal={onClose}
+      data-testid="addSubscriberModalComponent"
+    >
       <>
         <ModalBody>
           <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
                 Email*
               </label>
               <input
@@ -59,7 +70,10 @@ const AddSubscriberModal = (props) => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -93,12 +107,12 @@ const AddSubscriberModal = (props) => {
       </>
     </Modal>
   );
-}
+};
 
 AddSubscriberModal.propTypes = {
-  isOpen: PropTypes.bool, 
+  isOpen: PropTypes.bool,
   onClose: PropTypes.func,
-  onSuccess: PropTypes.func
-}
+  onSuccess: PropTypes.func,
+};
 
-export default AddSubscriberModal
+export default AddSubscriberModal;
