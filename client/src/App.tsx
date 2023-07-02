@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 // import { useQueryParam, NumberParam, withDefault } from "use-query-params";
 
 import { SecondaryButton } from "./components/Button";
 import AddSubscriberModal from "./components/AddSubscriberModal";
-// import SubscriberStatusModal from "./components/SubscriberStatusModal";
 import SubscriberTable from "./components/SubscriberTable";
 import TablePagination from "./components/TablePagination";
 import LoadingSpinner from "./components/LoadingSpinner";
@@ -11,32 +10,42 @@ import store from "./store";
 
 // Styles
 import "./App.css";
+import { PAGINATION_DEFAULT_PAGE, PAGINATION_ROWS_PER_PAGE } from "./constants";
+import { NumberParam, useQueryParam, withDefault } from "use-query-params";
 
 function App() {
+  const [currentPage, setCurrentPage] = useQueryParam(
+    "page",
+    withDefault(NumberParam, PAGINATION_DEFAULT_PAGE)
+  );
   const [showAddModal, setShowAddModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchSubscribers = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      await store.subscribers.fetch({
-        page: 1,
-        perPage: 25,
-      });
-    } catch (error) {
-      // handle error
-    }
+  const fetchSubscribers = useCallback(
+    async (page: number, perPage: number) => {
+      setIsLoading(true);
+      try {
+        await store.subscribers.fetch({
+          page,
+          perPage,
+        });
+      } catch (error) {
+        // handle error
+      }
 
-    setIsLoading(false);
-  }, []);
+      setIsLoading(false);
+    },
+    []
+  );
 
+  // On Mount
   useEffect(() => {
-    fetchSubscribers();
-  }, [fetchSubscribers]);
+    fetchSubscribers(currentPage, PAGINATION_ROWS_PER_PAGE);
+  }, [currentPage]);
 
-  // const onPageSelected = (page) => {
-  //   setPage(page);
-  // };
+  const onPageSelected = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const onOpenAddSubscriber = () => {
     setShowAddModal(true);
@@ -81,10 +90,12 @@ function App() {
           {!isLoading && store.subscribers.items && (
             <SubscriberTable subscribers={store.subscribers} />
           )}
-          <TablePagination
-            pagination={store.subscribers.pagination}
-            // onPageSelected={onPageSelected}
-          />
+          {store.subscribers.pagination && (
+            <TablePagination
+              pagination={store.subscribers.pagination}
+              onPageSelected={onPageSelected}
+            />
+          )}
         </div>
       </main>
     </div>

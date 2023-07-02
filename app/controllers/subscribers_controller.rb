@@ -10,8 +10,8 @@ class SubscribersController < ApplicationController
   def index
     subscribers = Subscriber.all
 
-    total_records = subscribers.count
-    limited_subscribers = subscribers[offset..limit]
+    total_records = subscribers.size # to avoid an additional query if possible
+    limited_subscribers = subscribers.limit(limit).offset(offset)
 
     render json: {subscribers: limited_subscribers, pagination: pagination(total_records)}, formats: :json
   end

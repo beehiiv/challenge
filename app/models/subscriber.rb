@@ -2,6 +2,8 @@
 # https://www.w3resource.com/javascript/form/email-validation.php#:~:text=To%20get%20a%20valid%20email,%5D%2B)*%24%2F.
 
 class Subscriber < ApplicationRecord
+    default_scope { order(created_at: :desc) }
+
     enum status: { inactive: 0, active: 1 }
     validates :status, inclusion: { in: statuses.keys }
     validates :email, {
