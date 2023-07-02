@@ -43,7 +43,7 @@ Challenge is a rails/react app meant to be used with our code challenge assignme
     bundle exec rspec
 
     # Run tests (Client)
-    yarn run test
+    yarn run client::test
 
 ## Lint It
 
