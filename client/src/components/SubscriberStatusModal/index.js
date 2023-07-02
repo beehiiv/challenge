@@ -1,3 +1,3 @@
-import SubscriberStatusModal from './SubscriberStatusModal';
+import SubscriberStatusModal from "./SubscriberStatusModal";
 
 export default SubscriberStatusModal;

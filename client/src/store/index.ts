@@ -1,5 +1,7 @@
 import { Subscribers } from "./subscribers";
 
-export default {
+const store = {
   subscribers: new Subscribers(),
 };
+
+export default store;

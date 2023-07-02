@@ -11,3 +11,10 @@ export type Subscriber = {
   created_at: string;
   updated_at: string;
 };
+
+export type Pagination = {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+};

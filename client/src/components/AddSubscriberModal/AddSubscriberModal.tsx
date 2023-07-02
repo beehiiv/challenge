@@ -1,17 +1,20 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 import Button, { SecondaryButton } from "../Button";
 import Modal, { ModalBody, ModalFooter } from "../Modal";
+import store from "../../store";
 
-import { createSubscriber } from "../../services/subscriber";
+export interface Props {
+  isOpen: boolean;
+  onClose(): void;
+  onSuccess(): void;
+}
 
-const AddSubscriberModal = (props) => {
-  const { isOpen, onClose, onSuccess } = props;
+const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const {
       target: { name, value },
     } = e;
@@ -22,25 +25,18 @@ const AddSubscriberModal = (props) => {
       setName(value);
     }
   };
-  const onSubmit = () => {
-    const payload = {
-      email,
-      name,
-    };
-
+  const onSubmit = async () => {
     setIsSaving(true);
-    createSubscriber(payload)
-      .then(() => {
-        onSuccess();
-      })
-      .catch((payload) => {
-        const error =
-          payload?.response?.data?.message || "Something went wrong";
-        console.error(error);
-      })
-      .finally(() => {
-        setIsSaving(false);
-      });
+    try {
+      await store.subscribers.addItem(name, email);
+      onSuccess();
+    } catch (error) {
+      // handle error
+      // const error =
+      //       payload?.response?.data?.message || "Something went wrong";
+      //     console.error(error);
+    }
+    setIsSaving(false);
   };
 
   return (
@@ -92,6 +88,8 @@ const AddSubscriberModal = (props) => {
             className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1"
             type="button"
             onClick={onClose}
+            loading={undefined}
+            disabled={undefined}
           >
             Cancel
           </SecondaryButton>
@@ -100,6 +98,7 @@ const AddSubscriberModal = (props) => {
             type="button"
             onClick={onSubmit}
             loading={isSaving}
+            disabled={undefined}
           >
             Add Subscriber
           </Button>
@@ -107,12 +106,6 @@ const AddSubscriberModal = (props) => {
       </>
     </Modal>
   );
-};
-
-AddSubscriberModal.propTypes = {
-  isOpen: PropTypes.bool,
-  onClose: PropTypes.func,
-  onSuccess: PropTypes.func,
 };
 
 export default AddSubscriberModal;

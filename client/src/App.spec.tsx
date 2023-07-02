@@ -1,8 +1,8 @@
+import "@testing-library/jest-dom";
 import App from "./App";
 import { QueryParamProvider } from "use-query-params";
 
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { getSubscribers } from "./services/subscriber";
 
 jest.mock("./services/subscriber");
@@ -14,8 +14,8 @@ const renderComponent = () => (
 );
 
 describe("App", () => {
-  beforeAll(() => {
-    getSubscribers.mockResolvedValue([]);
+  beforeEach(() => {
+    (getSubscribers as jest.Mock).mockResolvedValue([]);
   });
 
   test("renders component", () => {
