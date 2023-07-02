@@ -3,59 +3,64 @@
 class SubscribersController < ApplicationController
   include PaginationMethods
 
+  rescue_from StandardError, :with => :handle_uncaught_errors
+
   ##
   # GET /api/subscribers
   def index
-    subscribers = [
-      {
-        id: 1,
-        name: "Rick Sanchez",
-        email: "rickc137@citadel.com",
-        status: "active"
-      },
-      {
-        id: 2,
-        name: "Morty Smith",
-        email: "morty.smith@gmail.com",
-        status: "inactive"
-      },
-      {
-        id: 3,
-        name: "Jerry Smith",
-        email: "jerry.smith@aol.com",
-        status: "active"
-      },
-      {
-        id: 4,
-        name: "Beth Smith",
-        email: "beth.smith@gmail.com",
-        status: "active"
-      },
-      {
-        id: 5,
-        name: "Summer Smith",
-        email: "summer.smith@gmail.com",
-        status: "active"
-      },
-      {
-        id: 6,
-        name: "Bird Person",
-        email: "bird.person@birdworld.com",
-        status: "active"
-      }
-    ]
+    subscribers = Subscriber.all
 
-    total_records = subscribers.count
-    limited_subscribers = subscribers[offset..limit]
+    total_records = subscribers.size # to avoid an additional query if possible
+    limited_subscribers = subscribers.limit(limit).offset(offset)
 
     render json: {subscribers: limited_subscribers, pagination: pagination(total_records)}, formats: :json
   end
 
   def create
-    render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    subscriber = Subscriber.new({
+      name: params["name"],
+      email: params["email"]
+    })
+
+    if subscriber.valid?
+      subscriber.save
+      render json: subscriber, formats: :json, status: :created
+    else
+      render json: {
+        message: "Subscriber could not be created",
+        errors: subscriber.errors.messages
+      }, formats: :json, status: :bad_request
+    end
   end
 
   def update
-    render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    subscriber = Subscriber.find_by(id: params["id"])
+    
+    if subscriber.nil?
+      render json: {message: "Subscriber could not be found"}, formats: :json, status: :not_found
+    else
+      subscriber.status = params["status"]
+      if subscriber.valid?
+          subscriber.save
+          render json: subscriber, formats: :json, status: :ok
+      else
+        render json: {
+          message: "Subscriber could not be updated",
+          errors: subscriber.errors.messages
+        }, formats: :json, status: :bad_request
+      end
+    end
+  end
+
+  private
+  
+  def handle_uncaught_errors(error)
+    # todo: add error logging here
+    render json: {
+      message: "Subscriber could not be updated",
+      errors: {
+        "unknown": error || "Something went wrong",
+      }
+    }, formats: :json, status: :bad_request
   end
 end

@@ -12,7 +12,7 @@
     "deploy": "git fetch && git push -f heroku origin/master:refs/heads/master",
     "start": "npm run build && npm run start:server",
     "start:server": "bundle exec foreman start",
-    "test": "npm run --prefix client build",
+    "client::test": "yarn --cwd client test",
     "watch:app": "npm --prefix client start"
   }
 }
