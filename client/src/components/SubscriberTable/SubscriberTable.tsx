@@ -40,7 +40,10 @@ const SubscriberTable = observer(({ subscribers }: Props) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {subscribers.items.map((subscriber) => (
-                  <SubscriberRow subscriber={subscriber} />
+                  <SubscriberRow
+                    subscriber={subscriber}
+                    key={`subscriber-row-${subscriber.id}`}
+                  />
                 ))}
               </tbody>
             </table>
