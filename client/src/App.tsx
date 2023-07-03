@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SecondaryButton } from "./components/Button";
 import AddSubscriberModal from "./components/AddSubscriberModal";
 import SubscriberTable from "./components/SubscriberTable";
@@ -37,7 +37,7 @@ function App() {
   // On Mount
   useEffect(() => {
     fetchSubscribers(currentPage, PAGINATION_ROWS_PER_PAGE);
-  }, [currentPage]);
+  }, [currentPage, fetchSubscribers]);
 
   const onPageSelected = (page: number) => {
     setCurrentPage(page);
@@ -53,6 +53,7 @@ function App() {
 
   const onSuccessAddSubscriber = () => {
     setShowAddModal(false);
+    fetchSubscribers(currentPage, PAGINATION_ROWS_PER_PAGE);
   };
 
   return (
