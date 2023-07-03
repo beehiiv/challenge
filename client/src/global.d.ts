@@ -1,6 +1,7 @@
 export enum SubscriberStatus {
   Inactive = "inactive",
   Active = "active",
+  Foo = "foo",
 }
 
 export type Subscriber = {

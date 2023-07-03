@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button, { SecondaryButton } from "../Button";
 import Modal, { ModalBody, ModalFooter } from "../Modal";
 import store from "../../store";
+import FormInput from "../FormInput";
+import FormError from "../FormError";
 
 export interface Props {
   isOpen: boolean;
@@ -10,6 +12,11 @@ export interface Props {
 }
 
 const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
+  const [errors, setErrors] = useState<{
+    email?: string;
+    name?: string;
+    unknown?: string;
+  } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -25,29 +32,70 @@ const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
       setName(value);
     }
   };
+
   const onSubmit = async () => {
+    if (isSaving) {
+      return;
+    }
+
     setIsSaving(true);
+
+    // Clear errors
+    setErrors(null);
+
     try {
       await store.subscribers.addItem(name, email);
+
+      // Clear form
+      setName("");
+      setEmail("");
+
       onSuccess();
-    } catch (error) {
-      // handle error
-      // const error =
-      //       payload?.response?.data?.message || "Something went wrong";
-      //     console.error(error);
+    } catch (error: any) {
+      if (!error?.response?.data?.errors) {
+        setErrors({
+          ...errors,
+          unknown: "Something went wrong, please try again",
+        });
+        return;
+      }
+
+      if (error?.response?.data?.errors?.email) {
+        setErrors({
+          ...errors,
+          email: error?.response?.data?.errors?.email.join("\n"),
+        });
+      }
+
+      if (error?.response?.data?.errors?.name) {
+        setErrors({
+          ...errors,
+          name: error?.response?.data?.errors?.name.join("\n"),
+        });
+      }
     }
+
     setIsSaving(false);
+  };
+
+  const handleClose = () => {
+    setErrors(null);
+    setName("");
+    setEmail("");
+    setIsSaving(false);
+    onClose();
   };
 
   return (
     <Modal
       modalTitle="Add Subscriber"
       showModal={isOpen}
-      onCloseModal={onClose}
+      onCloseModal={handleClose}
       data-testid="addSubscriberModalComponent"
     >
       <>
         <ModalBody>
+          {errors?.unknown && <FormError message={errors.unknown} />}
           <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
             <div className="mb-4">
               <label
@@ -56,13 +104,13 @@ const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
               >
                 Email*
               </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              <FormInput
                 name="email"
                 type="email"
                 placeholder="rickc137@citadel.com"
                 onChange={handleChange}
                 value={email}
+                errorMessage={errors?.email}
               />
             </div>
             <div className="mb-4">
@@ -72,13 +120,13 @@ const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
               >
                 Name
               </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              <FormInput
                 name="name"
                 type="text"
                 placeholder="Rick Sanchez"
                 onChange={handleChange}
                 value={name}
+                errorMessage={errors?.name}
               />
             </div>
           </form>
@@ -87,7 +135,7 @@ const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
           <SecondaryButton
             className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1"
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             loading={undefined}
             disabled={undefined}
           >

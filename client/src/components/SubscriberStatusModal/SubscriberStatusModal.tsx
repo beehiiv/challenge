@@ -3,6 +3,7 @@ import Modal, { ModalBody, ModalFooter } from "../Modal";
 import Button, { SecondaryButton } from "../Button";
 import store from "../../store";
 import { SubscriberStatus } from "../../global.d";
+import FormError from "../FormError";
 
 export interface Props {
   isOpen: boolean;
@@ -12,24 +13,41 @@ export interface Props {
   status: SubscriberStatus;
 }
 
-const SubscriberStatusModal = (props: Props) => {
-  const { isOpen, onSuccess, onClose, subscriberId, status } = props;
-  const [isDeleting, setIsDeleting] = useState(false);
+const SubscriberStatusModal = ({
+  isOpen,
+  onSuccess,
+  onClose,
+  subscriberId,
+  status,
+}: Props) => {
+  const [error, setError] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const onUpdate = async () => {
+    setError(null);
+
     const newStatus: SubscriberStatus =
       status === SubscriberStatus.Active
         ? SubscriberStatus.Inactive
         : SubscriberStatus.Active;
 
-    setIsDeleting(true);
+    setIsUpdating(true);
     try {
-      await store.subscribers.updateItemStatus(subscriberId, newStatus);
+      await store.subscribers.updateItemStatus(
+        subscriberId,
+        SubscriberStatus.Foo
+      );
       onSuccess();
-    } catch (error) {
-      // handle error
+    } catch (error: any) {
+      if (!error?.response?.data) {
+        return;
+      }
+
+      setError(
+        error.response.data?.errors?.unknown || error.response.data?.message
+      );
     }
-    setIsDeleting(false);
+    setIsUpdating(false);
   };
 
   const modalTitleText = status === "active" ? "Unsubscribe" : "Resubscribe";
@@ -39,18 +57,29 @@ const SubscriberStatusModal = (props: Props) => {
       : "Are you sure you'd like to resubscribe this subscriber?";
   const buttonText = status === "active" ? "Unsubscribe" : "Resubscribe";
 
+  const handleClose = () => {
+    setError(null);
+    setIsUpdating(false);
+    onClose();
+  };
+
   return (
     <Modal
       modalTitle={modalTitleText}
       showModal={isOpen}
-      onCloseModal={onClose}
+      onCloseModal={handleClose}
     >
       <>
-        <ModalBody>{messageBodyText}</ModalBody>
+        <ModalBody>
+          <div className="text-left">
+            {error && <FormError message={error} />}
+            <p className="py-2">{messageBodyText}</p>
+          </div>
+        </ModalBody>
         <ModalFooter>
           <SecondaryButton
             className="mx-2"
-            onClick={onClose}
+            onClick={handleClose}
             loading={undefined}
             disabled={undefined}
           >
@@ -58,7 +87,7 @@ const SubscriberStatusModal = (props: Props) => {
           </SecondaryButton>
           <Button
             type="primary"
-            loading={isDeleting}
+            loading={isUpdating}
             onClick={onUpdate}
             className={undefined}
             disabled={undefined}
