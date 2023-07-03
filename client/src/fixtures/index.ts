@@ -1,4 +1,4 @@
-import { Subscriber, SubscriberStatus } from "../global";
+import { Subscriber, SubscriberStatus } from "../global.d";
 
 export const subscriberOne: Subscriber = {
   id: 123,

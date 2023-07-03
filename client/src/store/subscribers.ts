@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import type { Subscriber, Pagination, SubscriberStatus } from "../global";
+import type { Subscriber, Pagination, SubscriberStatus } from "../global.d";
 import {
   createSubscriber,
   getSubscribers,
@@ -49,6 +49,7 @@ export class Subscribers {
       page: params.page,
       per_page: params.perPage,
     });
+
     this.setItems(response.data.subscribers);
     this.setPagination(response.data.pagination);
   };

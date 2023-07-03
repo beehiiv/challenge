@@ -1,5 +1,5 @@
 import StatusPill from "../StatusPill";
-import { Subscriber } from "../../global";
+import { Subscriber } from "../../global.d";
 import { useState } from "react";
 import SubscriberStatusModal from "../SubscriberStatusModal";
 

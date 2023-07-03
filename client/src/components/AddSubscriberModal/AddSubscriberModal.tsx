@@ -91,12 +91,14 @@ const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
       modalTitle="Add Subscriber"
       showModal={isOpen}
       onCloseModal={handleClose}
-      data-testid="addSubscriberModalComponent"
     >
       <>
         <ModalBody>
           {errors?.unknown && <FormError message={errors.unknown} />}
-          <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
+          <form
+            className="my-4 text-blueGray-500 text-lg leading-relaxed"
+            data-testid="addSubscriberFormComponent"
+          >
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -147,6 +149,7 @@ const AddSubscriberModal = ({ isOpen, onClose, onSuccess }: Props) => {
             onClick={onSubmit}
             loading={isSaving}
             disabled={undefined}
+            data-testid="addSubscriberFormComponent-submitButton"
           >
             Add Subscriber
           </Button>

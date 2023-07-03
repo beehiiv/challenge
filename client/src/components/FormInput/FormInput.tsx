@@ -31,6 +31,7 @@ const FormInput = ({
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        aria-label={name}
       />
       {errorMessage && (
         <p className="text-red-500 text-xs italic">{errorMessage}</p>

@@ -1,6 +1,6 @@
 import React from "react";
 import cx from "classnames";
-import { Pagination } from "../../global";
+import { Pagination } from "../../global.d";
 
 export interface Props {
   className?: string;
@@ -71,6 +71,7 @@ const TablePagination = ({
             aria-current={i === page}
             className={i === page ? currentClassName : regularClassName}
             onClick={() => onPageSelected(i)}
+            data-testid="tablePaginationPageButton"
           >
             {i}
           </button>
@@ -94,6 +95,7 @@ const TablePagination = ({
           "py-3 flex items-center justify-between",
           insideCard ? "bg-white border-t border-gray-200" : ""
         )}
+        data-testid="tablePaginationComponent"
       >
         <div className="flex-1 flex justify-between sm:hidden">
           <button
