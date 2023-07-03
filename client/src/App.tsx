@@ -56,6 +56,13 @@ function App() {
     fetchSubscribers(currentPage, PAGINATION_ROWS_PER_PAGE);
   };
 
+  const leftHeading = (
+    <>
+      {store.subscribers.pagination?.total} Subscriber
+      {store.subscribers.pagination?.total === 1 ? "" : "s"}
+    </>
+  );
+
   return (
     <div
       className="min-h-screen bg-gray-100 text-gray-900"
@@ -70,7 +77,7 @@ function App() {
 
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-semibold flex items-center">
-            {store.subscribers.pagination?.total} Subscribers{" "}
+            {leftHeading}
             {isLoading && <LoadingSpinner className="ml-4" />}
           </h1>
           <SecondaryButton

@@ -45,6 +45,15 @@ const SubscriberTable = observer(({ subscribers }: Props) => {
                     key={`subscriber-row-${subscriber.id}`}
                   />
                 ))}
+                {subscribers.items.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-center text-sm text-gray-900">
+                        Wow, such empty!
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
