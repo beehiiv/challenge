@@ -33,10 +33,7 @@ const SubscriberStatusModal = ({
 
     setIsUpdating(true);
     try {
-      await store.subscribers.updateItemStatus(
-        subscriberId,
-        SubscriberStatus.Foo
-      );
+      await store.subscribers.updateItemStatus(subscriberId, newStatus);
       onSuccess();
     } catch (error: any) {
       if (!error?.response?.data) {
