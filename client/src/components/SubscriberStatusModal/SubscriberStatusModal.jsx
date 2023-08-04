@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal, { ModalBody, ModalFooter } from '../Modal'
 import PropTypes from 'prop-types';
 
@@ -11,6 +11,13 @@ import { updateSubscriber } from "../../services/subscriber";
 const SubscriberStatusModal = (props) => {
   const { isOpen, onSuccess, onClose, subscriberId, status } = props;
   const [isDeleting, setIsDeleting] = useState(false)
+  const [error, setError] = useState('') // Added error state
+
+  useEffect(() => {
+    if (isOpen) {
+      setError('') // Reset the error state when modal is opened
+    }
+  }, [isOpen]);
 
   const onUpdate = () => {
     const payload = {
@@ -23,8 +30,9 @@ const SubscriberStatusModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      const errorMsg = payload?.response?.data?.message || 'Something went wrong'
+      setError(errorMsg) // Set the error message
+      console.error(errorMsg)
     })
     .finally(() => {
       setIsDeleting(false)
@@ -43,6 +51,7 @@ const SubscriberStatusModal = (props) => {
     <Modal modalTitle={modalTitleText} showModal={isOpen} onCloseModal={onClose}>
       <>
         <ModalBody>
+          {error && <div className="text-red-500 mb-2">{error}</div>} {/* Display the error message */}
           {messageBodyText}
         </ModalBody>
         <ModalFooter>
