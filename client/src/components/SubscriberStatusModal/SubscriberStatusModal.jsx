@@ -11,6 +11,7 @@ import { updateSubscriber } from "../../services/subscriber";
 const SubscriberStatusModal = (props) => {
   const { isOpen, onSuccess, onClose, subscriberId, status } = props;
   const [isDeleting, setIsDeleting] = useState(false)
+  const [errors, setErrors] = useState([])
 
   const onUpdate = () => {
     const payload = {
@@ -22,9 +23,11 @@ const SubscriberStatusModal = (props) => {
     .then(() => {
       onSuccess()
     })
-    .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+    .catch((error) => {
+      console.log(error)
+      const errors = error?.response?.data?.message || ['Something went wrong']
+      setErrors(errors)
+      console.error(errors)
     })
     .finally(() => {
       setIsDeleting(false)
@@ -43,6 +46,13 @@ const SubscriberStatusModal = (props) => {
     <Modal modalTitle={modalTitleText} showModal={isOpen} onCloseModal={onClose}>
       <>
         <ModalBody>
+        {errors.length > 0 && (
+          <div className="text-red-500 mb-2">
+            {errors.map((error, index) => (
+              <div key={index}>{error}</div>
+            ))}
+          </div>
+        )}
           {messageBodyText}
         </ModalBody>
         <ModalFooter>

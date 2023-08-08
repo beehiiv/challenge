@@ -16,27 +16,47 @@ RSpec.describe SubscribersController, type: :controller do
     end
   end
 
-  describe "POST /subscribers" do
-    it "returns 201 if it successfully creates a subscriber" do
-      post :create, params: {email: "test@test.com", name: "John Smith"}, format: :json
+  describe "POST #create" do
+    context "with valid parameters" do
+      let(:valid_params) { { subscriber: { name: "Sam Smith", email: "sam@example.com" } } }
 
-      expect(response).to have_http_status(:created)
-      expect(response.content_type).to eq("application/json; charset=utf-8")
+      it "creates a new subscriber" do
+        expect {
+          post :create, params: valid_params
+        }.to change(Subscriber, :count).by(1)
+        expect(response.status).to eq(201)
+      end
+    end
 
-      json = JSON.parse(response.body, symbolize_names: true)
-      expect(json[:message]).to eq "Subscriber created successfully"
+    context "with invalid parameters" do
+      let(:invalid_params) { { subscriber: { name: "", email: "" } } }
+
+      it "does not create a subscriber and returns an error" do
+        expect {
+          post :create, params: invalid_params
+        }.not_to change(Subscriber, :count)
+        expect(response.status).to eq(422)
+      end
     end
   end
 
-  describe "PATCH /subscribers/:id" do
-    it "returns 200 if it successfully updates a subscriber" do
-      patch :update, params: {id: 1, status: "inactive"}, format: :json
+  describe "PUT #update" do
+    let(:subscriber) { Subscriber.create(name: "Jack Brown", email: "jack@example.com", status: "active") }
 
-      expect(response).to have_http_status(:ok)
-      expect(response.content_type).to eq("application/json; charset=utf-8")
+    context "with valid id" do
+      it "updates a subscriber's status" do
+        put :update, params: { id: subscriber.id }
+        subscriber.reload
+        expect(subscriber.status).to eq("inactive")
+        expect(response.status).to eq(200)
+      end
+    end
 
-      json = JSON.parse(response.body, symbolize_names: true)
-      expect(json[:message]).to eq "Subscriber updated successfully"
+    context "with invalid id" do
+      it "returns not found" do
+        put :update, params: { id: -1 }
+        expect(response.status).to eq(404)
+      end
     end
   end
 end
