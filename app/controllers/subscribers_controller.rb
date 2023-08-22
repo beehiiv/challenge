@@ -4,6 +4,11 @@ class SubscribersController < ApplicationController
   include PaginationMethods
 
   ##
+  def initialize(name: name, email: email)
+    @name = name
+    @email = email
+  end
+  
   # GET /api/subscribers
   def index
     subscribers = [
@@ -52,10 +57,25 @@ class SubscribersController < ApplicationController
   end
 
   def create
-    render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    subscriber = Subscriber.create(
+      name: @name, 
+      email: @email, 
+    )
+    
+    if subscriber.valid?
+      render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    else
+      render json: {message: "Subscriber not created"}, formats: :json
+    end
   end
 
-  def update
-    render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+  def update(status: status)
+    updated_subscriber = subscriber.update(status: status)
+
+    if updated_subscriber.save?
+      render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    else
+      render json: {message: "Subscriber not updated"}, formats: :json
+    end
   end
 end
