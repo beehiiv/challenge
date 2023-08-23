@@ -9,7 +9,7 @@ import Button, { SecondaryButton } from '../Button';
 import { updateSubscriber } from "../../services/subscriber";
 
 const SubscriberStatusModal = (props) => {
-  const { isOpen, onSuccess, onClose, subscriberId, status } = props;
+  const { isOpen, onSuccess, onClose, subscriberId, status, refreshSubscribers } = props;
   const [isDeleting, setIsDeleting] = useState(false)
 
   const onUpdate = () => {
@@ -20,6 +20,7 @@ const SubscriberStatusModal = (props) => {
     setIsDeleting(true)
     updateSubscriber(subscriberId, payload)
     .then(() => {
+      refreshSubscribers()
       onSuccess()
     })
     .catch((payload) => {

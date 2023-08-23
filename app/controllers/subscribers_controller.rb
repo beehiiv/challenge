@@ -4,7 +4,7 @@ class SubscribersController < ApplicationController
   include PaginationMethods
 
   def index
-    subscribers = Subscriber.all
+    subscribers = Subscriber.all.order(created_at: :desc)
     total_records = Subscriber.count
     limited_subscribers = subscribers[offset..limit]
 
