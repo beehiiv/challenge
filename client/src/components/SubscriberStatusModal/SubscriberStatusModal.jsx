@@ -9,7 +9,7 @@ import Button, { SecondaryButton } from '../Button';
 import { updateSubscriber } from "../../services/subscriber";
 
 const SubscriberStatusModal = (props) => {
-  const { isOpen, onSuccess, onClose, subscriberId, status, refreshSubscribers } = props;
+  const { isOpen, onSuccess, onClose, subscriberId, status, refreshSubscribers, onError } = props;
   const [isDeleting, setIsDeleting] = useState(false)
 
   const onUpdate = () => {
@@ -24,7 +24,8 @@ const SubscriberStatusModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
+      const error = payload?.response?.data?.errors || 'Something went wrong'
+      onError(error)
       console.error(error)
     })
     .finally(() => {

@@ -29,6 +29,7 @@ function App() {
   const [subscribers, setSubscribers] = useState([])
   const [pagination, setPagination] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const refreshSubscribers = useCallback(() => {
     const params = {
@@ -37,6 +38,7 @@ function App() {
     }
 
     setIsLoading(true)
+    setErrorMessage(null)
     getSubscribers(params)
     .then((payload) => {
       const subscribers = payload?.data?.subscribers || []
@@ -91,20 +93,23 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
+      <div>{errorMessage}</div>
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <AddSubscriberModal
-          refreshSubscribers={refreshSubscribers}
           isOpen={showAddModal}
           onClose={onCloseAddSubscriberModal}
           onSuccess={onSuccessAddSubscriber}
+          refreshSubscribers={refreshSubscribers}
+          onError={setErrorMessage}
         />
         <SubscriberStatusModal
           isOpen={focusedSubscriberId !== '' && focusedSubscriberStatus !== ''}
-          refreshSubscribers={refreshSubscribers}
           onClose={onCloseUpdateStatusSubscriberModal}
           onSuccess={onSuccessUpdateStatusSubscriber}
           subscriberId={focusedSubscriberId}
           status={focusedSubscriberStatus}
+          refreshSubscribers={refreshSubscribers}
+          onError={setErrorMessage}
         />
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-semibold flex items-center">

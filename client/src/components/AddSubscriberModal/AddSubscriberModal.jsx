@@ -6,7 +6,7 @@ import Modal, { ModalBody, ModalFooter } from '../Modal'
 import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
-  const { isOpen, onClose, onSuccess, refreshSubscribers } = props
+  const { isOpen, onClose, onSuccess, refreshSubscribers, onError } = props
   const [isSaving, setIsSaving] = useState(false)
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
@@ -33,7 +33,8 @@ const AddSubscriberModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
+      const error = payload?.response?.data?.errors || 'Something went wrong'
+      onError(error)
       console.error(error)
     })
     .finally(() => {

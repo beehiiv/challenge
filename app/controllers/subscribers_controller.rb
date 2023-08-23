@@ -20,7 +20,7 @@ class SubscribersController < ApplicationController
     if subscriber.valid?
       render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
     else
-      render json: {message: "Subscriber not created"}, formats: :json
+      render json: { errors: subscriber.errors.full_messages }, :status => 422
     end
   end
 
