@@ -13,8 +13,8 @@ class SubscribersController < ApplicationController
 
   def create
     subscriber = Subscriber.create(
-      name: params[:name].titleize, 
-      email: params[:email].strip.downcase, 
+      name: params[:name], 
+      email: params[:email],
     )
     
     if subscriber.valid?

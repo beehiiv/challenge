@@ -11,6 +11,7 @@ gem "bootsnap", ">= 1.4.4", require: false
 
 group :development, :test do
   gem "debug"
+  gem "dotenv-rails"
 end
 
 group :development, :test, :rake do
