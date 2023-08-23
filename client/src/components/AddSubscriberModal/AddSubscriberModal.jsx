@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from 'prop-types'
 import Button, { SecondaryButton } from '../Button'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
@@ -6,10 +6,19 @@ import Modal, { ModalBody, ModalFooter } from '../Modal'
 import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
-  const { isOpen, onClose, onSuccess, refreshSubscribers, onError } = props
+  const { isOpen, onClose, onSuccess, refreshSubscribers } = props
   const [isSaving, setIsSaving] = useState(false)
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      setEmail('')
+      setName('')
+      setErrorMessage(null)
+    }
+  }, [isOpen])
 
   const handleChange = (e) => {
     const { target: { name, value }} = e
@@ -27,6 +36,7 @@ const AddSubscriberModal = (props) => {
     }
 
     setIsSaving(true)
+    setErrorMessage(null)
     createSubscriber(payload)
     .then(() => {
       refreshSubscribers()
@@ -34,7 +44,7 @@ const AddSubscriberModal = (props) => {
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      onError(error)
+      setErrorMessage(error)
       console.error(error)
     })
     .finally(() => {
@@ -91,6 +101,7 @@ const AddSubscriberModal = (props) => {
           >
             Add Subscriber
           </Button>
+          <div>{errorMessage}</div>
         </ModalFooter>
       </>
     </Modal>

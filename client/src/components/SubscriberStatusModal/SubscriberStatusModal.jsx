@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal, { ModalBody, ModalFooter } from '../Modal'
 import PropTypes from 'prop-types';
 
@@ -9,8 +9,15 @@ import Button, { SecondaryButton } from '../Button';
 import { updateSubscriber } from "../../services/subscriber";
 
 const SubscriberStatusModal = (props) => {
-  const { isOpen, onSuccess, onClose, subscriberId, status, refreshSubscribers, onError } = props;
+  const { isOpen, onSuccess, onClose, subscriberId, status, refreshSubscribers } = props;
   const [isDeleting, setIsDeleting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      setErrorMessage(null)
+    }
+  }, [isOpen])
 
   const onUpdate = () => {
     const payload = {
@@ -18,6 +25,7 @@ const SubscriberStatusModal = (props) => {
     }
 
     setIsDeleting(true)
+    setErrorMessage(null)
     updateSubscriber(subscriberId, payload)
     .then(() => {
       refreshSubscribers()
@@ -25,7 +33,7 @@ const SubscriberStatusModal = (props) => {
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      onError(error)
+      setErrorMessage(error)
       console.error(error)
     })
     .finally(() => {
@@ -61,6 +69,7 @@ const SubscriberStatusModal = (props) => {
           >
             {buttonText}
           </Button>
+          <div>{errorMessage}</div>
         </ModalFooter>
       </>
     </Modal>
