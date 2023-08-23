@@ -33,7 +33,7 @@ const AddSubscriberModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.errors || 'Something went wrong'
+      const error = payload?.response?.data?.message || 'Something went wrong'
       onError(error)
       console.error(error)
     })

@@ -13,6 +13,6 @@ class Subscriber < ApplicationRecord
 	end
 
 	def process_name
-		self.titleize
+		self.name.titleize
 	end
 end

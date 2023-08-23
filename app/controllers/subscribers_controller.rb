@@ -4,34 +4,35 @@ class SubscribersController < ApplicationController
   include PaginationMethods
 
   def index
-    subscribers = Subscriber.all.order(created_at: :desc)
-    total_records = Subscriber.count
-    limited_subscribers = subscribers[offset..limit]
+    subscribers = Subscriber.limit(limit).offset(offset).order(created_at: :desc)
 
-    render json: {subscribers: limited_subscribers, pagination: pagination(total_records)}, formats: :json
+    render json: { subscribers: subscribers, pagination: pagination(Subscriber.count) }, formats: :json
   end
 
   def create
-    subscriber = Subscriber.create(
-      name: params[:name], 
-      email: params[:email],
-    )
+    subscriber = Subscriber.new(subscriber_params)
     
-    if subscriber.valid?
-      render json: {message: "Subscriber created successfully"}, formats: :json, status: :created
+    if subscriber.save
+      render json: { message: "Subscriber created successfully" }, formats: :json, status: :created
     else
-      render json: { errors: subscriber.errors.full_messages }, :status => 422
-    end
+      render json: { message: subscriber.errors.full_messages.join(" ") }, formats: :json, status: :unprocessable_entity
+    end 
   end
 
   def update
     subscriber = Subscriber.find(params[:id])
     updated_subscriber = subscriber.update(status: params[:status])
 
-    if subscriber.valid?
-      render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
+    if subscriber.save
+      render json: { message: "Subscriber updated successfully" }, formats: :json, status: :ok
     else
-      render json: {message: "Subscriber not updated"}, formats: :json
+      render json: { message: subscriber.errors.full_messages.join(" ") }, formats: :json, status: :unprocessable_entity
     end
+  end
+
+  private
+
+  def subscriber_params
+    params.permit(:name, :email)
   end
 end
