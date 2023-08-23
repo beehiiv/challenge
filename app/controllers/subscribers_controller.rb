@@ -3,54 +3,9 @@
 class SubscribersController < ApplicationController
   include PaginationMethods
 
-  ##
-  def initialize(name: name, email: email)
-    @name = name
-    @email = email
-  end
-  
-  # GET /api/subscribers
   def index
-    subscribers = [
-      {
-        id: 1,
-        name: "Rick Sanchez",
-        email: "rickc137@citadel.com",
-        status: "active"
-      },
-      {
-        id: 2,
-        name: "Morty Smith",
-        email: "morty.smith@gmail.com",
-        status: "inactive"
-      },
-      {
-        id: 3,
-        name: "Jerry Smith",
-        email: "jerry.smith@aol.com",
-        status: "active"
-      },
-      {
-        id: 4,
-        name: "Beth Smith",
-        email: "beth.smith@gmail.com",
-        status: "active"
-      },
-      {
-        id: 5,
-        name: "Summer Smith",
-        email: "summer.smith@gmail.com",
-        status: "active"
-      },
-      {
-        id: 6,
-        name: "Bird Person",
-        email: "bird.person@birdworld.com",
-        status: "active"
-      }
-    ]
-
-    total_records = subscribers.count
+    subscribers = Subscriber.all
+    total_records = Subscriber.count
     limited_subscribers = subscribers[offset..limit]
 
     render json: {subscribers: limited_subscribers, pagination: pagination(total_records)}, formats: :json
@@ -58,8 +13,8 @@ class SubscribersController < ApplicationController
 
   def create
     subscriber = Subscriber.create(
-      name: @name, 
-      email: @email, 
+      name: params[:name].titleize, 
+      email: params[:email].strip.downcase, 
     )
     
     if subscriber.valid?
@@ -69,10 +24,11 @@ class SubscribersController < ApplicationController
     end
   end
 
-  def update(status: status)
-    updated_subscriber = subscriber.update(status: status)
+  def update
+    subscriber = Subscriber.find(params[:id])
+    updated_subscriber = subscriber.update(status: params[:status])
 
-    if updated_subscriber.save?
+    if subscriber.valid?
       render json: {message: "Subscriber updated successfully"}, formats: :json, status: :ok
     else
       render json: {message: "Subscriber not updated"}, formats: :json

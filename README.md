@@ -29,7 +29,7 @@ Challenge is a rails/react app meant to be used with our code challenge assignme
     bundle exec foreman start
 
     # Frontend (http://localhost:2001)
-    yarn watch:app
+    NODE_OPTIONS=--openssl-legacy-provider yarn watch:app
 
     # view at http://localhost:2001, basic auth is username/password (see `config.ru`)
 ## Test It
