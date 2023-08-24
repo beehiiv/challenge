@@ -55,6 +55,11 @@ const SubscriberStatusModal = (props) => {
         <ModalBody>
           {messageBodyText}
         </ModalBody>
+          {errorMessage && (
+            <div className="w-1/2 bg-red-500 text-white border-red-600 px-4 py-2 rounded mx-auto mb-2">
+              {errorMessage}
+            </div>
+          )}
         <ModalFooter>
           <SecondaryButton
             className="mx-2"
@@ -69,7 +74,6 @@ const SubscriberStatusModal = (props) => {
           >
             {buttonText}
           </Button>
-          <div>{errorMessage}</div>
         </ModalFooter>
       </>
     </Modal>
@@ -81,7 +85,8 @@ SubscriberStatusModal.propTypes = {
   onClose: PropTypes.func,
   onSuccess: PropTypes.func,
   subscriberId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  status: PropTypes.string
+  status: PropTypes.string,
+  refreshSubscribers: PropTypes.func
 }
 
 export default SubscriberStatusModal;

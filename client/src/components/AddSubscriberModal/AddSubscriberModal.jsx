@@ -85,6 +85,11 @@ const AddSubscriberModal = (props) => {
             </div>
           </form>
         </ModalBody>
+          {errorMessage && (
+            <div className="w-1/2 bg-red-500 text-white border-red-600 px-4 py-2 rounded mx-auto mb-2">
+              {errorMessage}
+            </div>
+          )}
         <ModalFooter>
           <SecondaryButton
             className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1"
@@ -101,7 +106,6 @@ const AddSubscriberModal = (props) => {
           >
             Add Subscriber
           </Button>
-          <div>{errorMessage}</div>
         </ModalFooter>
       </>
     </Modal>
@@ -111,7 +115,8 @@ const AddSubscriberModal = (props) => {
 AddSubscriberModal.propTypes = {
   isOpen: PropTypes.bool, 
   onClose: PropTypes.func,
-  onSuccess: PropTypes.func
+  onSuccess: PropTypes.func,
+  refreshSubscribers: PropTypes.func
 }
 
 export default AddSubscriberModal
