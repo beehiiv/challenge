@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2023_08_22_152618) do
   create_table "subscribers", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
-    t.string "status", default: "inactive", null: false
+    t.string "status", default: "active", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

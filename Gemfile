@@ -34,6 +34,7 @@ group :test do
   gem "rspec-rails", "~> 4.0.1"
   gem "webmock", "~> 3.5.0"
   gem "mocha", "~> 1.2", ">= 1.2.1"
+  gem 'faker'
 end
 
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
