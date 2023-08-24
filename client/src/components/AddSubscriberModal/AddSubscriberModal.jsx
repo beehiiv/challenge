@@ -13,7 +13,7 @@ const AddSubscriberModal = (props) => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
       setEmail('')
       setName('')
       setErrorMessage(null)
@@ -58,6 +58,11 @@ const AddSubscriberModal = (props) => {
         <ModalBody>
           <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
             <div className="mb-4">
+              {errorMessage && (
+                <div className="w-1/2 bg-red-500 text-white border-red-600 px-4 py-2 rounded mx-auto mb-2">
+                  {errorMessage}
+                </div>
+              )}
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                 Email*
               </label>
@@ -85,11 +90,6 @@ const AddSubscriberModal = (props) => {
             </div>
           </form>
         </ModalBody>
-          {errorMessage && (
-            <div className="w-1/2 bg-red-500 text-white border-red-600 px-4 py-2 rounded mx-auto mb-2">
-              {errorMessage}
-            </div>
-          )}
         <ModalFooter>
           <SecondaryButton
             className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1"

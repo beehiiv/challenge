@@ -29,12 +29,13 @@ end
 group :test do
   gem "database_cleaner-active_record"
   gem "database_cleaner-redis"
-  gem "factory_bot"
+  gem "factory_bot_rails"
   gem "rack-test"
   gem "rspec-rails", "~> 4.0.1"
   gem "webmock", "~> 3.5.0"
   gem "mocha", "~> 1.2", ">= 1.2.1"
   gem 'faker'
+  gem 'shoulda-matchers'
 end
 
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]

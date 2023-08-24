@@ -1,42 +1,74 @@
-# frozen_string_literal: true
-
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe SubscribersController, type: :controller do
-  describe "GET /subscribers" do
-    it "returns 200 and a list of subscribers and pagination object" do
-      get :index, params: {}, format: :json
+  describe 'GET #index' do
+    let!(:subscribers) { create_list(:subscriber, 3) }
 
+    it 'returns a list of subscribers' do
+      allow(Subscriber).to receive(:count).and_return(subscribers.size)
+
+      get :index, format: :json
+      
       expect(response).to have_http_status(:ok)
-      expect(response.content_type).to eq("application/json; charset=utf-8")
-
-      json = JSON.parse(response.body, symbolize_names: true)
-      expect(json[:subscribers]).not_to be_nil
-      expect(json[:pagination]).not_to be_nil
+      json = JSON.parse(response.body)
+      expect(json['subscribers'].size).to eq(3)
     end
   end
 
-  describe "POST /subscribers" do
-    it "returns 201 if it successfully creates a subscriber" do
-      post :create, params: {email: "test@test.com", name: "John Smith"}, format: :json
+  describe 'POST #create' do
+    let(:valid_attributes) { { name: 'John Doe', email: 'johndoe@example.com' } }
 
-      expect(response).to have_http_status(:created)
-      expect(response.content_type).to eq("application/json; charset=utf-8")
+    context 'with valid attributes' do
+      it 'creates a new subscriber' do
+        expect {
+          post :create, params: valid_attributes, format: :json
+        }.to change(Subscriber, :count).by(1)
+      end
 
-      json = JSON.parse(response.body, symbolize_names: true)
-      expect(json[:message]).to eq "Subscriber created successfully"
+      it 'returns a success message' do
+        post :create, params: valid_attributes, format: :json
+        json = JSON.parse(response.body)
+        expect(json['message']).to eq('Subscriber created successfully')
+      end
+    end
+
+    context 'with invalid attributes' do
+      let(:invalid_attributes) { { name: '', email: 'invalid_email' } }
+
+      it 'does not create a new subscriber' do
+        expect {
+          post :create, params: invalid_attributes, format: :json
+        }.not_to change(Subscriber, :count)
+      end
     end
   end
 
-  describe "PATCH /subscribers/:id" do
-    it "returns 200 if it successfully updates a subscriber" do
-      patch :update, params: {id: 1, status: "inactive"}, format: :json
+  describe 'PUT #update' do
+    let(:subscriber) { create(:subscriber) }
 
-      expect(response).to have_http_status(:ok)
-      expect(response.content_type).to eq("application/json; charset=utf-8")
+    context 'with valid attributes' do
+      let(:valid_attributes) { { id: subscriber.id, status: 'new_status' } }
 
-      json = JSON.parse(response.body, symbolize_names: true)
-      expect(json[:message]).to eq "Subscriber updated successfully"
+      it 'updates the subscriber' do
+        put :update, params: valid_attributes, format: :json
+        expect(subscriber.reload.status).to eq('new_status')
+      end
+
+      it 'returns a success message' do
+        put :update, params: valid_attributes, format: :json
+        json = JSON.parse(response.body)
+        expect(json['message']).to eq('Subscriber updated successfully')
+      end
+    end
+
+    context 'with invalid attributes' do
+      let(:invalid_attributes) { { id: subscriber.id, status: '' } }
+
+      it 'does not update the subscriber' do
+        initial_status = subscriber.status
+        put :update, params: invalid_attributes, format: :json
+        expect(subscriber.reload.status).to eq(initial_status)
+      end
     end
   end
 end

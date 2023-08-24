@@ -14,7 +14,7 @@ const SubscriberStatusModal = (props) => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
       setErrorMessage(null)
     }
   }, [isOpen])
@@ -53,13 +53,13 @@ const SubscriberStatusModal = (props) => {
     <Modal modalTitle={modalTitleText} showModal={isOpen} onCloseModal={onClose}>
       <>
         <ModalBody>
-          {messageBodyText}
-        </ModalBody>
           {errorMessage && (
             <div className="w-1/2 bg-red-500 text-white border-red-600 px-4 py-2 rounded mx-auto mb-2">
               {errorMessage}
             </div>
           )}
+          {messageBodyText}
+        </ModalBody>
         <ModalFooter>
           <SecondaryButton
             className="mx-2"
