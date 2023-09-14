@@ -1,125 +1,100 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { useQueryParam, NumberParam, withDefault } from 'use-query-params';
-
-import { SecondaryButton } from './components/Button'
-import AddSubscriberModal from './components/AddSubscriberModal'
-import SubscriberStatusModal from './components/SubscriberStatusModal'
-import SubscriberTable from './components/SubscriberTable'
-import TablePagination from './components/TablePagination'
-import LoadingSpinner from './components/LoadingSpinner'
-
-// Services
-import { getSubscribers } from './services/subscriber'
-
-// Styles
-import './App.css';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [page, setPage] = useQueryParam(
-    'page',
-    withDefault(NumberParam, 1)
-  );
-  const [perPage] = useQueryParam(
-    'perPage',
-    withDefault(NumberParam, 25)
-  );
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [focusedSubscriberId, setFocusedSubscriberId] = useState('')
-  const [focusedSubscriberStatus, setFocusedSubscriberStatus] = useState('')
-  const [subscribers, setSubscribers] = useState([])
-  const [pagination, setPagination] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [subscribers, setSubscribers] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const refreshSubscribers = useCallback(() => {
-    const params = {
-      page,
-      per_page: perPage
+  const fetchSubscribers = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get('/api/subscribers', {
+        params: {
+          page,
+          per_page: perPage,
+        },
+      });
+      setSubscribers(response.data.subscribers);
+      setPagination(response.data.pagination);
+    } catch (error) {
+      console.error('Error fetching subscribers:', error);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(true)
-    getSubscribers(params)
-    .then((payload) => {
-      const subscribers = payload?.data?.subscribers || []
-      const pagination = payload?.data?.pagination || {}
-
-      setSubscribers(subscribers)
-      setPagination(pagination)
-    })
-    .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
-    })
-    .finally(() => {
-      setIsLoading(false)
-    })
   }, [page, perPage]);
 
+  const addSubscriber = async (newSubscriber) => {
+    try {
+      await axios.post('/api/subscribers/create', newSubscriber);
+      fetchSubscribers();
+    } catch (error) {
+      console.error('Error adding subscriber:', error);
+    }
+  };
+
+  const updateSubscriberStatus = async (subscriberId, status) => {
+    try {
+      await axios.put(`/api/subscribers/${subscriberId}`, { status });
+      fetchSubscribers();
+    } catch (error) {
+      console.error('Error updating subscriber:', error);
+    }
+  };
+
   useEffect(() => {
-    refreshSubscribers()
-  }, [refreshSubscribers]);
-
-  const onPageSelected = (page) => {
-    setPage(page)
-  }
-
-  const onOpenAddSubscriber = () => {
-    setShowAddModal(true)
-  }
-
-  const onCloseAddSubscriberModal = () => {
-    setShowAddModal(false)
-  }
-
-  const onSuccessAddSubscriber = () => {
-    setShowAddModal(false)
-  }
-
-  const onUpdateStatusSelectected = (subscriberId, status) => {
-    setFocusedSubscriberId(subscriberId)
-    setFocusedSubscriberStatus(status)
-  }
-
-  const onCloseUpdateStatusSubscriberModal = () => {
-    setFocusedSubscriberId('')
-    setFocusedSubscriberStatus('')
-  }
-
-  const onSuccessUpdateStatusSubscriber = () => {
-    setFocusedSubscriberId('')
-    setFocusedSubscriberStatus('')
-  }
+    fetchSubscribers();
+  }, [fetchSubscribers]);
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <AddSubscriberModal
-          isOpen={showAddModal}
-          onClose={onCloseAddSubscriberModal}
-          onSuccess={onSuccessAddSubscriber}
-        />
-        <SubscriberStatusModal
-          isOpen={focusedSubscriberId !== '' && focusedSubscriberStatus !== ''}
-          onClose={onCloseUpdateStatusSubscriberModal}
-          onSuccess={onSuccessUpdateStatusSubscriber}
-          subscriberId={focusedSubscriberId}
-          status={focusedSubscriberStatus}
-        />
-        <div className="flex justify-between items-center">
-          <h1 className="text-xl font-semibold flex items-center">
-            {pagination?.total} Subscribers {isLoading && <LoadingSpinner className="ml-4" />}
-          </h1>
-          <SecondaryButton onClick={onOpenAddSubscriber}>
-            Add Subscriber
-          </SecondaryButton>
+    <div>
+      <h1>Subscribers</h1>
+      <button onClick={() => setShowAddModal(true)}>Add Subscriber</button>
+      {showAddModal && (
+        <div>
+          {/* Add Subscriber Modal */}
+          {/* Implement your own logic here to add a subscriber */}
+          <button onClick={() => addSubscriber({/* your new subscriber data */})}>Add</button>
+          <button onClick={() => setShowAddModal(false)}>Cancel</button>
         </div>
-        <div className="mt-6">
-          <SubscriberTable
-            subscribers={subscribers}
-            onChangeStatusSelected={onUpdateStatusSelectected}
-          />
-          <TablePagination pagination={pagination} onPageSelected={onPageSelected} />
-        </div>
-      </main>
+      )}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {subscribers.map((subscriber) => (
+            <tr key={subscriber.id}>
+              <td>{subscriber.id}</td>
+              <td>{subscriber.name}</td>
+              <td>{subscriber.email}</td>
+              <td>{subscriber.status}</td>
+              <td>
+                <button onClick={() => {
+                  updateSubscriberStatus(subscriber.id, /* new status */);
+                }}>
+                  Update Status
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div>
+        {/* Pagination */}
+        <button disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</button>
+        <span>Page {page} of {Math.ceil(pagination.total / perPage)}</span>
+        <button disabled={page >= Math.ceil(pagination.total / perPage)} onClick={() => setPage(page + 1)}>Next</button>
+      </div>
     </div>
   );
 }
