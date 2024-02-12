@@ -26,7 +26,7 @@ const SubscriberStatusModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload.toString()
+      const error = payload.response.data.errors.toString()
       console.error(error)
     })
     .finally(() => {
