@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from 'prop-types'
 import Button, { SecondaryButton } from '../Button'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
@@ -10,8 +10,18 @@ const AddSubscriberModal = (props) => {
   const [isSaving, setIsSaving] = useState(false)
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+  const [status, setStatus] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    if (!isOpen) {
+      //setEmail('')
+      //setName('')
+      setErrorMessage(null)
+    }
+  }, [isOpen])
+
+  const update = (e) => {
     const { target: { name, value }} = e
 
     if (name === 'email') {
@@ -19,20 +29,25 @@ const AddSubscriberModal = (props) => {
     } else if (name === 'name') {
       setName(value)
     }
+    setStatus("active")
   }
   const onSubmit = () => {
     const payload = {
       email,
-      name
+      name,
+      status
     }
 
     setIsSaving(true)
+    setErrorMessage(null)
     createSubscriber(payload)
     .then(() => {
+      console.log(payload)
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
+      const error = payload.response.data.errors.toString()
+      setErrorMessage(error)
       console.error(error)
     })
     .finally(() => {
@@ -46,6 +61,11 @@ const AddSubscriberModal = (props) => {
         <ModalBody>
           <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
             <div className="mb-4">
+              {errorMessage && (
+                <div className="w-1/2 bg-red-500 text-white border-red-600 px-4 py-2 rounded mx-auto mb-2">
+                  {errorMessage}
+                </div>
+              )}
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                 Email*
               </label>
@@ -53,8 +73,8 @@ const AddSubscriberModal = (props) => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="email"
                 type="email"
-                placeholder="rickc137@citadel.com"
-                onChange={handleChange}
+                placeholder="joenormalson@example.com"
+                onChange={update}
                 value={email}
               />
             </div>
@@ -66,8 +86,8 @@ const AddSubscriberModal = (props) => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="name"
                 type="text"
-                placeholder="Rick Sanchez"
-                onChange={handleChange}
+                placeholder="Joe Normalson"
+                onChange={update}
                 value={name}
               />
             </div>

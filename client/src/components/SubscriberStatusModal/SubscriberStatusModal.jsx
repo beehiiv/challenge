@@ -13,8 +13,11 @@ const SubscriberStatusModal = (props) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const onUpdate = () => {
-    const payload = {
-      status: status === 'active' ? 'inactive' : 'active'
+    var payload
+    if (status === 'active') {
+      payload = {status: 'inactive'}
+    } else {
+            payload = {status: 'active'}
     }
 
     setIsDeleting(true)
@@ -23,7 +26,7 @@ const SubscriberStatusModal = (props) => {
       onSuccess()
     })
     .catch((payload) => {
-      const error = payload?.response?.data?.message || 'Something went wrong'
+      const error = payload.response.data.errors.toString()
       console.error(error)
     })
     .finally(() => {
@@ -31,13 +34,19 @@ const SubscriberStatusModal = (props) => {
     })
   }
 
-  const modalTitleText = status === 'active' ? 
-    "Unsubscribe" : "Resubscribe"
-  const messageBodyText = status === 'active' ? 
-    "Are you sure you'd like to unsubscribe this subscriber?" :
-    "Are you sure you'd like to resubscribe this subscriber?"
-  const buttonText = status === 'active' ? 
-    "Unsubscribe" : "Resubscribe"
+  var modalTitleText = ""
+  var messageBodyText = ""
+  var buttonText = ""
+
+  if (status === 'active') {
+    modalTitleText = "Unsubscribe"
+    messageBodyText = "Are you sure you'd like to unsubscribe?"
+  } else {
+    modalTitleText = "Resubscribe"
+    messageBodyText = "Are you sure you'd like to resubscribe?"
+  }
+
+  buttonText = modalTitleText
 
   return (
     <Modal modalTitle={modalTitleText} showModal={isOpen} onCloseModal={onClose}>
@@ -47,7 +56,7 @@ const SubscriberStatusModal = (props) => {
         </ModalBody>
         <ModalFooter>
           <SecondaryButton
-            className="mx-2"
+            className="cancel_btn"
             onClick={onClose}
           >
             Cancel
